@@ -68,6 +68,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -86,11 +87,7 @@ public class RobotContainer {
 // to here
     public final drive drivetrain = TunerConstants.createDrivetrain();
 
-    private final SendableChooser<Command> autochooser;
-
     public RobotContainer() {
-        autochooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("Auto chooser", autochooser);
         configureBindings();
     }
 
@@ -101,7 +98,7 @@ public class RobotContainer {
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withVelocityY(joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
@@ -125,6 +122,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return autochooser.getSelected();
+        return Commands.print("No autonomous command configured");
     }
 }
