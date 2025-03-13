@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.util.Color;
 
 public class LedStrip {
     
-    private final AddressableLED m_led = new AddressableLED(0); // PWM port 0
+    private final AddressableLED m_led = new AddressableLED(2); // PWM port 0
     private final AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(300); // fix to length
 
     public LedStrip () {

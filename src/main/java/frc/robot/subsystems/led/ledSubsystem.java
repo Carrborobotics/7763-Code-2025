@@ -11,12 +11,16 @@ public class ledSubsystem extends SubsystemBase {
     Color primaryColor;
     Color secondaryColor;
     LedMode mode;
+    private FireEffect fireEffect;
+    private PacmanEffect pacmanEffect;
 
     public ledSubsystem() {
         ledStrip = new LedStrip();
         mode = LedMode.SOLID;
         primaryColor = Color.kBlack;
         secondaryColor = Color.kBlack;
+        fireEffect = new FireEffect(ledStrip.getBufferLength());
+        pacmanEffect = new PacmanEffect(ledStrip.getBufferLength());
     }
 
     // setter for current primary Color
@@ -48,8 +52,15 @@ public class ledSubsystem extends SubsystemBase {
         } else if (mode == LedMode.FLASH) {
             strobe(primaryColor, 1.0);
         } else if (mode == LedMode.WAVE) {
-            wave(primaryColor, secondaryColor, 25.0, 1.0);
-        } 
+            wave(primaryColor, secondaryColor, 25.0, 1.0);  
+        } else if (mode == LedMode.WAVE2) {
+            wave(primaryColor, secondaryColor, 10.0, 0.5);  
+        } else if (mode == LedMode.FIRE) {
+            fireEffect.update(ledStrip);
+        } else if (mode == LedMode.PACMAN) {
+            pacmanEffect.update(ledStrip);
+        }
+   
     }
     
     private void solid(Color color) {
@@ -95,7 +106,10 @@ public class ledSubsystem extends SubsystemBase {
         SOLID,
         STROBE,
         WAVE,
-        FLASH;
+        WAVE2,
+        FLASH,
+        PACMAN,
+        FIRE;
     }
     
 }

@@ -108,8 +108,8 @@ public class RobotContainer {
         );
 
         // set color at startup
-        Color redBumper = new Color(128,8,8);
-        Color blueBumper = new Color(28,60,124);
+        Color redBumper = Color.kRed; //new Color(128,8,8);
+        Color blueBumper = Color.kBlue; //new Color(28,60,124);
         original_color = Robot.isRed() ? redBumper : blueBumper;
         
         m_led.setColor(original_color);
@@ -156,12 +156,14 @@ public class RobotContainer {
 
         driver.povUp().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));        
         driver.povDown().onTrue(s_Swerve.resetModulesToAbsolute());
-
-        //driver.a().onTrue(elevators.setNextStopCommand(ElevatorStop.L1).andThen(setColor(Color.kBlue));
-        driver.a().onTrue(ledCommand(LedMode.WAVE, Color.kBlue, Color.kPurple));
-        driver.x().onTrue(elevators.setNextStopCommand(ElevatorStop.L2).andThen(colorCommand(Color.kGold)));
-        driver.y().onTrue(elevators.setNextStopCommand(ElevatorStop.L3).andThen(colorCommand(Color.kPink)));
-        driver.b().onTrue(elevators.setNextStopCommand(ElevatorStop.L4).andThen(colorCommand(Color.kAqua)));
+        driver.a().onTrue(elevators.setNextStopCommand(ElevatorStop.L1).andThen(ledCommand(LedMode.FIRE, Color.kGreen, Color.kYellow)));
+        //driver.a().onTrue(ledCommand(LedMode.WAVE, Color.kRed, Color.kPurple));
+        //driver.a().onTrue(colorCommand(Color.kPurple));
+        //driver.x().onTrue(ledCommand(LedMode.WAVE2, Color.kGreen, Color.kYellow));
+        driver.x().onTrue(elevators.setNextStopCommand(ElevatorStop.L2).andThen(ledCommand(LedMode.WAVE, Color.kPurple, Color.kAquamarine)));
+        //driver.y().onTrue(ledCommand(LedMode.FIRE, Color.kBlue, Color.kPurple));
+        driver.y().onTrue(elevators.setNextStopCommand(ElevatorStop.L3).andThen(ledCommand(LedMode.FIRE, Color.kBlue, Color.kBlueViolet)));
+        driver.b().onTrue(elevators.setNextStopCommand(ElevatorStop.L4).andThen(ledCommand(LedMode.WAVE, Color.kRed, Color.kPurple)));
 
         driver.leftBumper().onTrue(elevators.moveToNext());
         driver.rightBumper().onTrue(intake.setIntakeSpeed(0.4));
