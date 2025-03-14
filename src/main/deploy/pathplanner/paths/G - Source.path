@@ -20,7 +20,7 @@
         "y": 7.304432397959183
       },
       "prevControl": {
-        "x": 1.7609693877551031,
+        "x": 1.7609693877551034,
         "y": 7.543207908163264
       },
       "nextControl": null,
@@ -31,7 +31,19 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Feed",
+      "waypointRelativePos": 0.2,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Feed"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 4.0,

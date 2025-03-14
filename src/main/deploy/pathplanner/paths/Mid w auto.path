@@ -53,6 +53,17 @@
           "name": "Elevator L4"
         }
       }
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Shoot"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -71,7 +82,7 @@
   "folder": "Start",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -178.91907581333933
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
