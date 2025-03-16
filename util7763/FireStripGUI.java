@@ -86,12 +86,8 @@ public class FireStripGUI extends JFrame {
 
         // Step 4. Convert heat to LED colors
         for (int j = 0; j < LED_COUNT; j++) {
-            //System.out.print(" " + heat[j]);
-
             setPixelHeatColor(j, heat[j]);
-            //setPixel(j, (int) heat[j] & 0xFF, 0, 0);
         }
-        //System.out.println(""); // Byte value: " + j + " " + heat[j]);
     }
 
 private void setPixelHeatColor(int pixel, byte temperature) {

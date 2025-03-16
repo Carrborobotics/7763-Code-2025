@@ -5,8 +5,23 @@ These need work to be more plug-and-play with the actual robot code, this is a w
 
 To test out the display (which uses Java Swing/AWT guis):
 
-```sh
-javac FireStripGUI.java && java FireStripGUI
-javac WaveStripGUI.java && java WaveStripGUI
+Default primary/secondary colors are RED and GREEN.
+
+Some effects can take one or more colors.
+
+```bash
+
+javac LedStripDemo.java
+
+java LedStripDemo solid
+java LedStripDemo solid magenta
+java LedStripDemo flash yellow
+java LedStripDemo strobe orange
+java LedStripDemo waverb
+java LedStripDemo wave
+java LedStripDemo wave blue black
+java LedStripDemo fire
+java LedStripDemo pacman
+
 ```
 

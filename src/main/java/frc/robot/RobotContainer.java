@@ -22,8 +22,7 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOReal;
-
-import frc.robot.subsystems.ledSubsystem;
+import frc.robot.subsystems.led.ledSubsystem;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
@@ -264,9 +263,9 @@ public class RobotContainer {
     }
 
     // scoreBarge - elevates to max, move forward?, reverse intake, back up?, lower elevator, pivot to feed
-    private Command scoreBarge() {
-        return new InstantCommand(() -> m_led.setColors(Color.kBlue, Color.kGreen));
-    }
+    //private Command scoreBarge() {
+    //    return new InstantCommand(() -> m_led.setColors(Color.kBlue, Color.kGreen));
+    //}
 
     // Setup basic last foot options
     private void setReefCommands(ReefFace face) {
