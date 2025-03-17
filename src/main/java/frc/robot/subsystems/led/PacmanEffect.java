@@ -1,4 +1,5 @@
-import java.awt.Color;
+package frc.robot.subsystems.led;
+import edu.wpi.first.wpilibj.util.Color;
 
 public class PacmanEffect {
     // Pacman game variables
@@ -13,10 +14,10 @@ public class PacmanEffect {
     private double ghostSpeed = 0.4;
     private int pacmanDirection = -1; // 1 = right, -1 = left
 
-    private Color[] ghostColors = {Color.RED, Color.PINK, Color.CYAN, Color.ORANGE};
-    private Color pacmanColor = Color.YELLOW;
-    private Color ghostFleeColor = Color.BLUE;
-    private Color ghostFleeColor2 = Color.WHITE;
+    private Color[] ghostColors = {Color.kRed, Color.kPink, Color.kCyan, Color.kOrange};
+    private Color pacmanColor = Color.kYellow;
+    private Color ghostFleeColor = Color.kBlue;
+    private Color ghostFleeColor2 = Color.kWhite;
     private int numLeds;
 
     public PacmanEffect(int numLeds) {
@@ -86,13 +87,13 @@ public class PacmanEffect {
 
         // Clear the strip
         for (int i = 0; i < numLeds; i++) {
-            ledStrip.setPixel(i, Color.BLACK);
+            ledStrip.setPixel(i, Color.kBlack);
         }
 
         // Draw pellet
         if (!pelletEaten) {
             if ((int) (ledStrip.getCurrentTime() * 2) % 2 == 0) { // Flash every 0.5 seconds
-                ledStrip.setPixelWidth(pelletPosition, Color.WHITE, pacWidth);
+                ledStrip.setPixelWidth(pelletPosition, Color.kWhite, pacWidth);
             }
         }
 

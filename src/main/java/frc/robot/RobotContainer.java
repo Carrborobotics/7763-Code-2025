@@ -23,6 +23,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOReal;
 import frc.robot.subsystems.led.ledSubsystem;
+import frc.robot.subsystems.led.ledSubsystem.LedMode;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
@@ -156,7 +157,8 @@ public class RobotContainer {
         driver.povUp().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));        
         driver.povDown().onTrue(s_Swerve.resetModulesToAbsolute());
 
-        driver.a().onTrue(/*elevators.setNextStopCommand(ElevatorStop.L1).andThen(*/setColor(Color.kBlue).andThen(setSecondaryColor(Color.kPurple).andThen(setMode(wave))));
+        //driver.a().onTrue(elevators.setNextStopCommand(ElevatorStop.L1).andThen(setColor(Color.kBlue));
+        driver.a().onTrue(ledCommand(LedMode.WAVE, Color.kBlue, Color.kPurple));
         driver.x().onTrue(elevators.setNextStopCommand(ElevatorStop.L2).andThen(colorCommand(Color.kGold)));
         driver.y().onTrue(elevators.setNextStopCommand(ElevatorStop.L3).andThen(colorCommand(Color.kPink)));
         driver.b().onTrue(elevators.setNextStopCommand(ElevatorStop.L4).andThen(colorCommand(Color.kAqua)));
@@ -252,6 +254,15 @@ public class RobotContainer {
 
     private Command colorCommand(Color acolor) {
         return new InstantCommand(() -> m_led.setColor(acolor));
+    }
+
+    private Command ledCommand(LedMode mode, Color primaryColor, Color secondaryColor) {
+        return new InstantCommand( () -> {
+            m_led.setMode(mode);
+            m_led.setColor(primaryColor);
+            m_led.setSecondaryColor(secondaryColor);
+        }
+        );
     }
     
     // pullAlgae - aligns, elevates, turns on intake for time period since algae wont hit sensor, reverses bot some

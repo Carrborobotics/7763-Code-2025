@@ -1,3 +1,4 @@
+package frc.robot.subsystems.led;
 import java.util.Random;
 
 public class FireEffect {

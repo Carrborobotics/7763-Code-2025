@@ -27,7 +27,7 @@ public class LedStrip {
     }
 
     // set real pixels
-    private void setPixel(int i, int r, int g, int b) {
+    public void setPixel(int i, int r, int g, int b) {
         // swap red and green channels in the real implementation
         int red = g;
         int green = r;
