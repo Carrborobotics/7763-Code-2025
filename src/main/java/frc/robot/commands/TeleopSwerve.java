@@ -50,6 +50,6 @@ public class TeleopSwerve extends Command {
                 0.0,
                 0.0,
                 new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
-                rotationVal * Constants.Swerve.maxAngularVelocity, false, false, useCoralLimelightSup.getAsBoolean());
+                rotationVal * Constants.Swerve.maxAngularVelocity, true, false, useCoralLimelightSup.getAsBoolean());
     }
 }
