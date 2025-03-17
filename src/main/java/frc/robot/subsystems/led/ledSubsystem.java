@@ -48,8 +48,8 @@ public class ledSubsystem extends SubsystemBase {
         } else if (mode == LedMode.FLASH) {
             strobe(primaryColor, 1.0);
         } else if (mode == LedMode.WAVE) {
-            wave(primaryColor, Color.kBlack, 25.0, 1.0);
-        }
+            wave(primaryColor, secondaryColor, 25.0, 1.0);
+        } 
     }
     
     private void solid(Color color) {
@@ -87,6 +87,8 @@ public class ledSubsystem extends SubsystemBase {
             ledStrip.setMixPixel(i, c1, c2, ratio);
         }
     }
+
+    
     
 
     public static enum LedMode {

@@ -156,7 +156,7 @@ public class RobotContainer {
         driver.povUp().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));        
         driver.povDown().onTrue(s_Swerve.resetModulesToAbsolute());
 
-        driver.a().onTrue(elevators.setNextStopCommand(ElevatorStop.L1).andThen(colorCommand(Color.kBrown)));
+        driver.a().onTrue(/*elevators.setNextStopCommand(ElevatorStop.L1).andThen(*/setColor(Color.kBlue).andThen(setSecondaryColor(Color.kPurple).andThen(setMode(wave))));
         driver.x().onTrue(elevators.setNextStopCommand(ElevatorStop.L2).andThen(colorCommand(Color.kGold)));
         driver.y().onTrue(elevators.setNextStopCommand(ElevatorStop.L3).andThen(colorCommand(Color.kPink)));
         driver.b().onTrue(elevators.setNextStopCommand(ElevatorStop.L4).andThen(colorCommand(Color.kAqua)));
