@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
 public class LedStripDemo {
 
     private LedStrip ledStrip; 
@@ -19,7 +18,9 @@ public class LedStripDemo {
 
     // the Effects
     private FireEffect fireEffect;
-    private PacmanEffect pacmanEffect;
+    private FireEffect fireLeftEffect;
+    private FireEffect fireRightEffect;
+    //private PacmanEffect pacmanEffect;
 
     public LedStripDemo(LedMode mode, Color primaryColor, Color secondaryColor) {
         /*-----------------------------------------------------------*/
@@ -30,9 +31,14 @@ public class LedStripDemo {
         /*-----------------------------------------------------------*/
 
         ledStrip = new LedStrip();
+        int numLeds = ledStrip.getBufferLength();
+
         // effects
-        fireEffect = new FireEffect(ledStrip.getBufferLength());
-        pacmanEffect = new PacmanEffect(ledStrip.getBufferLength());
+        fireEffect = new FireEffect(numLeds, 0, numLeds-1, false);
+        fireRightEffect = new FireEffect(numLeds/2, 0, numLeds/2-1, true);
+        fireLeftEffect = new FireEffect(numLeds/2, numLeds/2, numLeds-1, false);
+
+        //pacmanEffect = new PacmanEffect(ledStrip.getBufferLength());
 
         // 20ms to match Timer in real roboRio
         timer = new Timer(20, new ActionListener() {
@@ -53,7 +59,7 @@ public class LedStripDemo {
     // display demo gui (MAIN)
     public static void main(String[] args) {
         // Default values if no arguments are provided
-        LedMode mode = LedMode.PACMAN;
+        LedMode mode = LedMode.FIRE;
         Color primaryColor = Color.RED;
         Color secondaryColor = Color.GREEN;
 
@@ -122,9 +128,13 @@ public class LedStripDemo {
         } else if (mode == LedMode.WAVERB) {
             waveEffectRedBlue();
         } else if (mode == LedMode.FIRE) {
-            fireEffect.update(ledStrip);
-        } else if (mode == LedMode.PACMAN) {
-            pacmanEffect.update(ledStrip);
+            //fireEffect.update(ledStrip, Color.WHITE, Color.YELLOW, Color.RED, Color.BLACK);
+            //fireRightEffect.update(ledStrip, Color.WHITE, Color.YELLOW, Color.RED, Color.BLACK);
+            fireLeftEffect.update(ledStrip, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
+            fireRightEffect.update(ledStrip, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
+            
+        // } else if (mode == LedMode.PACMAN) {
+        //     pacmanEffect.update(ledStrip);
         }
     }
     
