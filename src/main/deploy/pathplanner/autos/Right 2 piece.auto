@@ -5,33 +5,33 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Intake On"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Middle "
+            "pathName": "Right Start w auto"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "J - Source"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Pivot to Shoot"
+            "name": "Intake On"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Elevator L4"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "Source - K"
           }
         }
       ]

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1268442622950818,
-        "y": 7.285655737704918
+        "x": 5.07,
+        "y": 2.6892499999999995
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0147906908665103,
-        "y": 6.890183798929408
+        "x": 4.33875,
+        "y": 2.2114999999999996
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.6338647959183676,
-        "y": 5.185299744897959
+        "x": 1.3064999999999998,
+        "y": 0.66125
       },
       "prevControl": {
-        "x": 3.1040816326530614,
-        "y": 5.8717793367346935
+        "x": 2.1645,
+        "y": 1.1682499999999993
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,35 +33,13 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Pivot to Shoot",
+      "name": "Feed",
       "waypointRelativePos": 0.3,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "Pivot to Shoot"
-        }
-      }
-    },
-    {
-      "name": "Elevator L4",
-      "waypointRelativePos": 0.5,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Elevator L4"
-        }
-      }
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Shoot"
+          "name": "Feed"
         }
       }
     }
@@ -75,14 +53,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -60.52411099675435
+    "velocity": 0.0,
+    "rotation": 52.0
   },
   "reversed": false,
-  "folder": "To Score",
+  "folder": "To Source",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -52.73359809902278
+    "rotation": 119.99999999999999
   },
   "useDefaultConstraints": true
 }

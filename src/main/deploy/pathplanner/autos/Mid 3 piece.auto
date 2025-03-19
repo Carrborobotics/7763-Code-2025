@@ -17,12 +17,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "auto G - Source"
@@ -44,12 +38,6 @@
           "type": "path",
           "data": {
             "pathName": "Source C w auto"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
           }
         }
       ]
