@@ -15,6 +15,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 
+import java.lang.reflect.Field;
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -33,7 +36,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Vision;
+import frc.robot.commands.LocalSwerve;
 
 
 public class Swerve extends SubsystemBase {
@@ -45,8 +50,10 @@ public class Swerve extends SubsystemBase {
     //private final Notifier odoNotifier;
     private final SwerveDrivePoseEstimator m_poseEstimator;
     private final Field2d field;
+    
     private final Pigeon2 gyro;
     private final Vision vision = new Vision();
+    public ReefFace goalFace;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID, Constants.Swerve.CanBus);
@@ -54,6 +61,7 @@ public class Swerve extends SubsystemBase {
         gyro.setYaw(0);
 
         ll = false;
+        goalFace = ReefFace.KL;
 
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, Constants.Swerve.Mod0.constants),
@@ -65,6 +73,7 @@ public class Swerve extends SubsystemBase {
         // Let the field be visible in elastic
         field = new Field2d();
         SmartDashboard.putData("Field", field);
+
 
         m_poseEstimator = new SwerveDrivePoseEstimator(
                 Constants.Swerve.swerveKinematics,
@@ -195,7 +204,7 @@ public class Swerve extends SubsystemBase {
         return positions;
     }
 
-    public Pose2d getPose() {
+    public Pose2d  getPose() {
         return m_poseEstimator.getEstimatedPosition();
     }
 
@@ -266,20 +275,46 @@ public class Swerve extends SubsystemBase {
     public static ReefFace nearestFace(Translation2d position) {
         Rotation2d reefBearing = flipIfRed(reefBearing(position));
         double bearingAngle = MathUtil.inputModulus(reefBearing.getDegrees(), -180, 180);
+
         SmartDashboard.putNumber("bearing angle", bearingAngle);
+
         if (bearingAngle > 150 || bearingAngle < -150) {
+            //goalFace = ReefFace.GH;
             return ReefFace.GH;
         } else if (bearingAngle > 90) {
+            //goalFace = ReefFace.EF;
             return ReefFace.EF;
         } else if (bearingAngle > 30) {
+            //goalFace = ReefFace.CD;
             return ReefFace.CD;
         } else if (bearingAngle > -30) {
+            //goalFace = ReefFace.AB;
             return ReefFace.AB;
         } else if (bearingAngle > -90) {
+            //goalFace = ReefFace.KL;
             return ReefFace.KL;
         } else { // bearingAngle > -150
+            //goalFace = ReefFace.IJ;
             return ReefFace.IJ;
         }
+    }
+
+    private Command alignReef(boolean left) {
+        SmartDashboard.putString("align reef face", goalFace.toString());
+
+        return Commands.sequence(
+                Commands.sequence( // score
+                    new LocalSwerve(this, left ? goalFace.approachLeft : goalFace.approachRight, false),
+                    //elevators.moveToNext(),
+                    new WaitCommand(0.5),
+                    new LocalSwerve(this, left ? goalFace.alignLeft : goalFace.alignRight, true)
+                )
+            );
+    }
+
+    public Command alignLeft() {
+        SmartDashboard.putString("align left face", goalFace.toString());
+        return alignReef(true);
     }
 
     public void zeroHeading() {
@@ -334,9 +369,14 @@ public class Swerve extends SubsystemBase {
 
         Pose2d pose = getPose();
         field.setRobotPose(pose);   
-        
+
         SmartDashboard.putString("actual pose", pose.toString());
         SmartDashboard.putString("nearest face" , nearestFace(pose.getTranslation()).toString());
+
+        goalFace = nearestFace(pose.getTranslation());
+
+        SmartDashboard.putString("goal face", goalFace.toString());
+
 
         m_poseEstimator.update(getGyroYaw(), getModulePositions());
     

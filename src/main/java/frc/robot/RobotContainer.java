@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -66,6 +67,7 @@ public class RobotContainer {
     private final Intake intake;
     private final Pivot pivot;
     private final ledSubsystem m_led = new ledSubsystem();
+    private final Field2d targetField;
     
     /* misc variables */
     public boolean leftSide;
@@ -114,6 +116,9 @@ public class RobotContainer {
         
         m_led.setColor(original_color);
 
+        targetField = new Field2d();
+        SmartDashboard.putData("Target Field", targetField);
+
         for (ReefFace face: ReefFace.values()) {
             setReefCommands(face);
         }
@@ -122,8 +127,8 @@ public class RobotContainer {
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
-        SmartDashboard.putString("approach right", Swerve.nearestFace(s_Swerve.getPose().getTranslation()).approachRight.toString());
-        SmartDashboard.putString("approach left", Swerve.nearestFace(s_Swerve.getPose().getTranslation()).approachLeft.toString());
+        //SmartDashboard.putString("approach right", Swerve.nearestFace(s_Swerve.getPose().getTranslation()).approachRight.toString());
+        //SmartDashboard.putString("approach left", Swerve.nearestFace(s_Swerve.getPose().getTranslation()).approachLeft.toString());
 
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
@@ -168,8 +173,8 @@ public class RobotContainer {
         driver.leftBumper().onTrue(elevators.moveToNext());
         driver.rightBumper().onTrue(intake.setIntakeSpeed(0.4));
 
-        //driver.leftTrigger().whileTrue();
-        driver.rightTrigger().whileTrue(new InstantCommand(() -> LimelightHelpers.setLEDMode_PipelineControl("limelight")));
+        driver.leftTrigger().whileTrue(s_Swerve.alignLeft());
+        //driver.rightTrigger().whileTrue(alignRight());
 
         driver.back().onTrue(pivot.pivotTo(Pivots.ShootL4));
         driver.start().onTrue(feed());
@@ -192,41 +197,39 @@ public class RobotContainer {
 
     private Command alignReef(ReefFace face, boolean left) {
         SmartDashboard.putString("target face", face.toString());
+        targetField.setRobotPose(face.alignLeft);   
+
 
         return Commands.sequence(
             Commands.either(
                 Commands.sequence( // score
                     new LocalSwerve(s_Swerve, left ? face.approachLeft : face.approachRight, false),
-                    elevators.moveToNext(),
+                    //elevators.moveToNext(),
                     new WaitCommand(0.5),
                     new LocalSwerve(s_Swerve, left ? face.alignLeft : face.alignRight, true)
                 ),
                 Commands.sequence( // remove algae
                     new LocalSwerve(s_Swerve, face.approachMiddle, false),
-                    new LocalSwerve(s_Swerve, face.alignMiddle, true),
-                    elevators.moveToNext()
+                    new LocalSwerve(s_Swerve, face.alignMiddle, true)
+                    //elevators.moveToNext()
                 ),
                 intake::hasCoral
             ),
             shootCoral()
         );
     }
-
+/*
     private Command alignLeft() {
+        SmartDashboard.putString("left face", Swerve.nearestFace(s_Swerve.getPose().getTranslation()).toString());
         return alignReef(Swerve.nearestFace(s_Swerve.getPose().getTranslation()), true);
     }
 
     private Command alignRight() {
+        SmartDashboard.putString("right face",Swerve.nearestFace(s_Swerve.getPose().getTranslation()).toString());
+
         return alignReef(Swerve.nearestFace(s_Swerve.getPose().getTranslation()), false);
     }
-    
-    private Command alignLeftNextStop() {
-        return alignLeft();
-    }
-    
-    private Command alignRightNextStop() {
-        return alignRight();
-    }
+*/ 
 
     // feed - get to feeder station with pivot and elevator in place, spin up intake when close, and wait for coral sensor, stop intake and pivot to shoot
     private Command feed() {
