@@ -20,6 +20,8 @@ public class LedStripDemo {
     private FireEffect fireEffect;
     private FireEffect fireLeftEffect;
     private FireEffect fireRightEffect;
+    private BubbleEffect bubbleEffect;
+    //private BubbleEffect bubbleRightEffect;
     //private PacmanEffect pacmanEffect;
 
     public LedStripDemo(LedMode mode, Color primaryColor, Color secondaryColor) {
@@ -37,6 +39,8 @@ public class LedStripDemo {
         fireEffect = new FireEffect(numLeds, 0, numLeds-1, false);
         fireRightEffect = new FireEffect(numLeds/2, 0, numLeds/2-1, true);
         fireLeftEffect = new FireEffect(numLeds/2, numLeds/2, numLeds-1, false);
+        bubbleEffect = new BubbleEffect(numLeds, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
+        //bubbleRightEffect = new BubbleEffect(numLeds/2, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
 
         //pacmanEffect = new PacmanEffect(ledStrip.getBufferLength());
 
@@ -128,10 +132,16 @@ public class LedStripDemo {
         } else if (mode == LedMode.WAVERB) {
             waveEffectRedBlue();
         } else if (mode == LedMode.FIRE) {
-            //fireEffect.update(ledStrip, Color.WHITE, Color.YELLOW, Color.RED, Color.BLACK);
-            //fireRightEffect.update(ledStrip, Color.WHITE, Color.YELLOW, Color.RED, Color.BLACK);
+            // one-sided fire // fireEffect.update(ledStrip, Color.WHITE, Color.YELLOW, Color.RED, Color.BLACK);
+
             fireLeftEffect.update(ledStrip, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
             fireRightEffect.update(ledStrip, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
+            
+        } else if (mode == LedMode.BUBBLE) {
+            // one-sided fire // fireEffect.update(ledStrip, Color.WHITE, Color.YELLOW, Color.RED, Color.BLACK);
+            bubbleEffect.update(ledStrip);//, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
+
+            //bubbleRightEffect.update(ledStrip, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
             
         // } else if (mode == LedMode.PACMAN) {
         //     pacmanEffect.update(ledStrip);
@@ -182,6 +192,7 @@ public class LedStripDemo {
         WAVERB,
         FIRE,
         PACMAN,
+        BUBBLE,
         FLASH;
     }
     
