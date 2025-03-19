@@ -41,18 +41,18 @@ public class ElevatorIOReal implements ElevatorIO {
         elevatorLeftConfig.idleMode(IdleMode.kBrake);
 
         elevatorLeftConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        elevatorLeftConfig.closedLoop.pid(0.01, 0.0, 0.5);
+        elevatorLeftConfig.closedLoop.pid(0.003, 0.0, 0.25);
         elevatorLeftConfig.closedLoop.maxMotion.allowedClosedLoopError(0.5);
-        elevatorLeftConfig.closedLoop.maxMotion.maxVelocity(6784);
-        elevatorLeftConfig.closedLoop.maxMotion.maxAcceleration(10000);
+        elevatorLeftConfig.closedLoop.maxMotion.maxVelocity(8000);
+        elevatorLeftConfig.closedLoop.maxMotion.maxAcceleration(30000);
 
         elevatorRightConfig.follow(Constants.CANConstants.elevatorLeftId,true);
 
         elevatorLeft.configure(elevatorLeftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        elevatorLeftConfig.softLimit
-            .reverseSoftLimit(-71)
-            .reverseSoftLimitEnabled(true).forwardSoftLimit(0).forwardSoftLimitEnabled(true);
+        //elevatorLeftConfig.softLimit
+            //.reverseSoftLimit(-71)
+            //.reverseSoftLimitEnabled(true).forwardSoftLimit(0).forwardSoftLimitEnabled(true);
 
         elevatorRight.configure(elevatorRightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

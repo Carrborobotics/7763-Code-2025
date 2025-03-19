@@ -28,7 +28,7 @@ import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
-    public static final double stickDeadband = 0.1;
+    public static final double stickDeadband = 0.12;
 
     public static final class VortexMotorConstants {
         public static final double kFreeSpeedRpm = 0.5;
@@ -325,9 +325,10 @@ public final class Constants {
         public static final double kCamHeight = 0.41;
         public static final double kTagHeight = 1.27;
         public static final double kCamPitch = Math.PI / 4; // ~45 degrees (pi/4 rad)
-        public static final String kCameraName = "Elgato_Facecam:_Elgato_Facecam";
-        public static final Transform3d kRobotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(30.0/2.0 - 6.958), 0.0, Units.inchesToMeters(6.55)),
-                    new Rotation3d(Units.degreesToRadians(0.0), Units.degreesToRadians(-20.0), 0.0));
+        public static final String kCameraName = "Arducam_OV9281_USB_Camera";
+        public static final Transform3d kRobotToCam = new Transform3d(
+            new Translation3d(Units.inchesToMeters(30.0/2.0 - 7), Units.inchesToMeters(17), Units.inchesToMeters(12)),
+                    new Rotation3d(Units.degreesToRadians(0.0), Units.degreesToRadians(10.0), -25.0));
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
