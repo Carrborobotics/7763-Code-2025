@@ -342,7 +342,7 @@ public final class Constants {
 
       public static final class PathPlanner {
         public static final RobotConfig robotConfig = new RobotConfig(
-            Mass.ofRelativeUnits(130, Pounds),
+            Mass.ofRelativeUnits(138, Pounds),
             MomentOfInertia.ofRelativeUnits(7.0, KilogramSquareMeters),
             new ModuleConfig(
                 Swerve.wheelCircumference / (Math.PI * 2.0),
