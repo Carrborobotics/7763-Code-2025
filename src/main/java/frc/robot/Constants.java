@@ -326,12 +326,18 @@ public final class Constants {
         public static final double kTagHeight = 1.27;
         public static final double kCamPitch = Math.PI / 4; // ~45 degrees (pi/4 rad)
         public static final String kCameraName = "Arducam_OV9281_USB_Camera";
+        /*  E-chain side mount
         public static final Transform3d kRobotToCam = new Transform3d(
             new Translation3d(Units.inchesToMeters(30.0/2.0 - 7), Units.inchesToMeters(17), Units.inchesToMeters(12)),
-                    new Rotation3d(Units.degreesToRadians(0.0), Units.degreesToRadians(10.0), -25.0));
+                    new Rotation3d(Units.degreesToRadians(0.0), Units.degreesToRadians(15.0), 25.0));
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
-
+        */
+        public static final Transform3d kRobotToCam = new Transform3d(
+            new Translation3d(Units.inchesToMeters(30.0/2.0 - 7), Units.inchesToMeters(-12), Units.inchesToMeters(17)), // X and Y were swapped?
+                    new Rotation3d(Units.degreesToRadians(0.0), Units.degreesToRadians(15.0), -25.0));
+        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+        public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
     }
 
       public static final class PathPlanner {
