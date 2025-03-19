@@ -54,7 +54,7 @@ public class LedStrip {
     }
     // set a pixel based on a blend of colors c1 & c2 with a ratio (0..1)
     // which is a percentage of C2.
-    public void setMixPixel(int i, Color c1, Color c2, double ratio) {
+    public void setPixelMix(int i, Color c1, Color c2, double ratio) {
         double red = (c1.red * (1 - ratio)) + (c2.red * ratio);
         double green = (c1.green * (1 - ratio)) + (c2.green * ratio);
         double blue = (c1.blue * (1 - ratio)) + (c2.blue * ratio);

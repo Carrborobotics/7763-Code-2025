@@ -11,15 +11,21 @@ public class ledSubsystem extends SubsystemBase {
     Color primaryColor;
     Color secondaryColor;
     LedMode mode;
-    private FireEffect fireEffect;
+    //private FireEffect fireEffect;
+    private FireEffect fireLeftEffect;
+    private FireEffect fireRightEffect;
     private PacmanEffect pacmanEffect;
 
     public ledSubsystem() {
         ledStrip = new LedStrip();
+        int numLeds = ledStrip.getBufferLength();
+
         mode = LedMode.SOLID;
         primaryColor = Color.kBlack;
         secondaryColor = Color.kBlack;
-        fireEffect = new FireEffect(ledStrip.getBufferLength());
+        //fireEffect = new FireEffect(ledStrip.getBufferLength());
+        fireRightEffect = new FireEffect(numLeds/2, 0, numLeds/2-1, true);
+        fireLeftEffect = new FireEffect(numLeds/2, numLeds/2, numLeds-1, false);
         pacmanEffect = new PacmanEffect(ledStrip.getBufferLength());
     }
 
@@ -56,7 +62,13 @@ public class ledSubsystem extends SubsystemBase {
         } else if (mode == LedMode.WAVE2) {
             wave(primaryColor, secondaryColor, 10.0, 0.5);  
         } else if (mode == LedMode.FIRE) {
-            fireEffect.update(ledStrip);
+            // one-sided fire // 
+            //fireEffect.update(ledStrip, Color.WHITE, Color.YELLOW, Color.RED, Color.BLACK);
+            
+            // two-sided fire in reef themed colors//
+            fireLeftEffect.update(ledStrip, Color.kGreen, Color.kCyan, Color.kBlue, Color.kBlack);
+            fireRightEffect.update(ledStrip, Color.kGreen, Color.kCyan, Color.kBlue, Color.kBlack);
+
         } else if (mode == LedMode.PACMAN) {
             pacmanEffect.update(ledStrip);
         }
@@ -95,7 +107,7 @@ public class ledSubsystem extends SubsystemBase {
             if (Double.isNaN(ratio)) {
                 ratio = 0.5;
             }
-            ledStrip.setMixPixel(i, c1, c2, ratio);
+            ledStrip.setPixelMix(i, c1, c2, ratio);
         }
     }
 
