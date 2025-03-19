@@ -272,48 +272,48 @@ public class Swerve extends SubsystemBase {
         return relativePosition.getAngle();
     }
 
-    public ReefFace nearestFace(Translation2d position) {
+    public static ReefFace nearestFace(Translation2d position) {
         Rotation2d reefBearing = flipIfRed(reefBearing(position));
         double bearingAngle = MathUtil.inputModulus(reefBearing.getDegrees(), -180, 180);
 
         SmartDashboard.putNumber("bearing angle", bearingAngle);
 
         if (bearingAngle > 150 || bearingAngle < -150) {
-            goalFace = ReefFace.GH;
+            //goalFace = ReefFace.GH;
             return ReefFace.GH;
         } else if (bearingAngle > 90) {
-            goalFace = ReefFace.EF;
+            //goalFace = ReefFace.EF;
             return ReefFace.EF;
         } else if (bearingAngle > 30) {
-            goalFace = ReefFace.CD;
+            //goalFace = ReefFace.CD;
             return ReefFace.CD;
         } else if (bearingAngle > -30) {
-            goalFace = ReefFace.AB;
+            //goalFace = ReefFace.AB;
             return ReefFace.AB;
         } else if (bearingAngle > -90) {
-            goalFace = ReefFace.KL;
+            //goalFace = ReefFace.KL;
             return ReefFace.KL;
         } else { // bearingAngle > -150
-            goalFace = ReefFace.IJ;
+            //goalFace = ReefFace.IJ;
             return ReefFace.IJ;
         }
     }
 
     private Command alignReef(boolean left) {
-        SmartDashboard.putString("target face", goalFace.toString());
+        SmartDashboard.putString("align reef face", goalFace.toString());
 
         return Commands.sequence(
                 Commands.sequence( // score
-                    new LocalSwerve(this, left ? nearestFace(getPose().getTranslation()).approachLeft : nearestFace(getPose().getTranslation()).approachRight, false),
+                    new LocalSwerve(this, left ? goalFace.approachLeft : goalFace.approachRight, false),
                     //elevators.moveToNext(),
                     new WaitCommand(0.5),
-                    new LocalSwerve(this, left ? nearestFace(getPose().getTranslation()).alignLeft : nearestFace(getPose().getTranslation()).alignRight, true)
+                    new LocalSwerve(this, left ? goalFace.alignLeft : goalFace.alignRight, true)
                 )
             );
     }
 
     public Command alignLeft() {
-        SmartDashboard.putString("left face", nearestFace(getPose().getTranslation()).toString());
+        SmartDashboard.putString("align left face", goalFace.toString());
         return alignReef(true);
     }
 
@@ -372,6 +372,9 @@ public class Swerve extends SubsystemBase {
 
         SmartDashboard.putString("actual pose", pose.toString());
         SmartDashboard.putString("nearest face" , nearestFace(pose.getTranslation()).toString());
+
+        goalFace = nearestFace(pose.getTranslation());
+
         SmartDashboard.putString("goal face", goalFace.toString());
 
 
