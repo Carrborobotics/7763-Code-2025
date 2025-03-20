@@ -68,7 +68,18 @@ public class Pivot extends SubsystemBase {
         ShootL4
     };
 
-    // geared at 25:1
+    /*
+     * Note that the real pivot is geared at 27:1.
+     * TODO: AI says we should fix the positionConversionFactor in PivotIOReal
+     * Double-check the positionConversionFactor in the SparkFlexConfig within
+     *  PivotIOReal. It should be set up to correctly account for the 27:1 gearing
+     *   ratio. If this is wrong, it will throw off all of your angle calculations.
+     * The positionConversionFactor should be set to 360.0 / 27.0 if you want the
+     *   encoder to report the angle of the pivot arm.
+     * Ensure that the leader.getAbsoluteEncoder().getPosition() is returning the
+     *   correct value. If it is not, then the positionConversionFactor is likely
+     *   wrong.
+     */
     private final EnumMap<Pivots, Angle> pivotsPos = new EnumMap<>(Map.ofEntries(
             Map.entry(Pivots.Intake, Degrees.of(18.8)), //7.5
             Map.entry(Pivots.Up, Degrees.of(10)), //11
@@ -81,13 +92,16 @@ public class Pivot extends SubsystemBase {
         return Commands.runOnce(() -> this.setpoint = pivotsPos.get(pivot));
     }
 
-    public Command pivotToOnElevator(Pivots pivot, ElevatorStop stop) {
+    /*
+     * Turn pivot to the correct angle based on the elevator setting.
+     */
+    public Command pivotToOnElevator(ElevatorStop stop) {
         return Commands.runOnce( 
             () -> {
                 if (stop == ElevatorStop.L4) {
                     this.setpoint = pivotsPos.get(Pivots.ShootL4);
                 } else {
-                    this.setpoint = pivotsPos.get(pivot);    
+                    this.setpoint = pivotsPos.get(Pivots.Shoot);    
                 }
             }
         );
@@ -97,9 +111,9 @@ public class Pivot extends SubsystemBase {
         return runOnce(() -> this.setpoint = position);
     }
 
-    public boolean pivotSafe() {
-        return (setpoint.compareTo(pivotsPos.get(Pivots.Up)) > -0.5);
-    }
+    // public boolean isPivotSafe() {
+    //     return (setpoint.compareTo(pivotsPos.get(Pivots.Up)) > -0.5);
+    // }
 
     @Override
     public void periodic() {
