@@ -76,7 +76,7 @@ public class Elevator extends SubsystemBase {
             Map.entry(ElevatorStop.L2_ALGAE, Inches.of(11.5)),
             Map.entry(ElevatorStop.L3, Inches.of(12.0)), // was 13.5
             Map.entry(ElevatorStop.L3_ALGAE, Inches.of(18.0)),
-            Map.entry(ElevatorStop.L4, Inches.of(20.0))  //21.2
+            Map.entry(ElevatorStop.L4, Inches.of(22.0))  //21.2
         ));
 
     public Command moveTo(ElevatorStop stop) {
