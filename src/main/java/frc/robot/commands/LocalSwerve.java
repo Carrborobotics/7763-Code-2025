@@ -10,26 +10,27 @@ import frc.robot.Constants;
 import frc.robot.subsystems.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class LocalSwerve extends LoggedCommandBase{
+public class LocalSwerve extends Command{
     private final Swerve m_swerve;
     private final Pose2d targetPose;
     private final boolean precise;
     private final double positionIZone = 4;
     private final double positionKS = 0.02;
-    private final double positionTolerance = 1;
-    private final double roughPositionTolerance = 2.5; // inches
+    private final double positionTolerance = 5; // 1
+    private final double roughPositionTolerance = 7; // inches
     private final double rotationKS = 0.02;
     private final double rotationIZone = 4;
     private final double maxSpeed = Constants.Swerve.maxSpeed / 5.0; // 3.0
-    private final double maxAngularVelocity = Constants.Swerve.maxAngularVelocity / 3.0; // 2.0
+    private final double maxAngularVelocity = Constants.Swerve.maxAngularVelocity / 7.0; // 2.0
 
     private final double rotationTolerance = 0.5; // degrees
     private final double roughRotatationTolerance = 1.5; // degrees
     
-    private final PIDController xPID = new PIDController(Constants.Swerve.driveKP, 0, 0);
-    private final PIDController yPID = new PIDController(Constants.Swerve.driveKP, 0, 0);
-    private final PIDController rPID = new PIDController(Constants.Swerve.angleKP, 0, 0);
+    private final PIDController xPID = new PIDController(Constants.Swerve.driveKP/1.5, 0, 0);
+    private final PIDController yPID = new PIDController(Constants.Swerve.driveKP/1.5, 0, 0);
+    private final PIDController rPID = new PIDController(0.1, 0, 0);
 
     public LocalSwerve(Swerve m_swerve, Pose2d targetPose, boolean precise){
         super();
@@ -94,9 +95,13 @@ public class LocalSwerve extends LoggedCommandBase{
             0.0,
             0.0,
             new Translation2d(xVal, yVal).times(maxSpeed),
-            rotationVal * 0.5 * maxAngularVelocity,
+            rotationVal * maxAngularVelocity,
             true, false, false
          );
     }
 
+    @Override
+    public boolean isFinished() {
+        return xPID.atSetpoint() && yPID.atSetpoint() && rPID.atSetpoint();
+    }
 }

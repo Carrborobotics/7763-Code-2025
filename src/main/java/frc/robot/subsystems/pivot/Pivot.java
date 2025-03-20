@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
+import frc.robot.subsystems.elevator.Elevator.ElevatorStop;
 import frc.robot.util.LoggedTunableNumber;
 
 import static edu.wpi.first.units.Units.*;
@@ -80,11 +81,23 @@ public class Pivot extends SubsystemBase {
         return Commands.runOnce(() -> this.setpoint = pivotsPos.get(pivot));
     }
 
+    public Command pivotToOnElevator(Pivots pivot, ElevatorStop stop) {
+        return Commands.runOnce( 
+            () -> {
+                if (stop == ElevatorStop.L4) {
+                    this.setpoint = pivotsPos.get(Pivots.ShootL4);
+                } else {
+                    this.setpoint = pivotsPos.get(pivot);    
+                }
+            }
+        );
+    }
+
     public Command setPosition(Angle position) {
         return runOnce(() -> this.setpoint = position);
     }
 
-    public boolean pivotSafe(){
+    public boolean pivotSafe() {
         return (setpoint.compareTo(pivotsPos.get(Pivots.Up)) > -0.5);
     }
 

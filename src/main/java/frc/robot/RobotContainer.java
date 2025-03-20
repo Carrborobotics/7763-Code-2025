@@ -162,21 +162,18 @@ public class RobotContainer {
         driver.povUp().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));        
         driver.povDown().onTrue(s_Swerve.resetModulesToAbsolute());
         driver.a().onTrue(elevators.setNextStopCommand(ElevatorStop.L1).andThen(ledCommand(LedMode.WAVE, Color.kGreen, Color.kBlue)));
-        //driver.a().onTrue(ledCommand(LedMode.WAVE, Color.kRed, Color.kPurple));
-        //driver.a().onTrue(colorCommand(Color.kPurple));
-        //driver.x().onTrue(ledCommand(LedMode.WAVE2, Color.kGreen, Color.kYellow));
         driver.x().onTrue(elevators.setNextStopCommand(ElevatorStop.L2).andThen(ledCommand(LedMode.WAVE2, Color.kBlue, Color.kPink)));
-        //driver.y().onTrue(ledCommand(LedMode.FIRE, Color.kBlue, Color.kPurple));
         driver.y().onTrue(elevators.setNextStopCommand(ElevatorStop.L3).andThen(ledCommand(LedMode.WAVE2, Color.kPurple, Color.kOrange)));
         driver.b().onTrue(elevators.setNextStopCommand(ElevatorStop.L4).andThen(ledCommand(LedMode.FIRE, Color.kRed, Color.kPurple)));
 
         driver.leftBumper().onTrue(elevators.moveToNext());
         driver.rightBumper().onTrue(intake.setIntakeSpeed(0.4));
 
-        driver.leftTrigger().whileTrue(s_Swerve.alignLeft());
-        //driver.rightTrigger().whileTrue(alignRight());
+        driver.leftTrigger().whileTrue(s_Swerve.alignLeft(elevators));
+        driver.rightTrigger().whileTrue(s_Swerve.alignRight(elevators));
+        //driver.back().onTrue(pivot.pivotTo(Pivots.ShootL4));
+        driver.back().onTrue(pivot.pivotToOnElevator(Pivots.ShootL4, elevators.getNextStop()));
 
-        driver.back().onTrue(pivot.pivotTo(Pivots.ShootL4));
         driver.start().onTrue(feed());
 
         Trigger coralSensed = new Trigger(() -> intake.hasCoral());
@@ -195,46 +192,11 @@ public class RobotContainer {
      */
 
 
-    private Command alignReef(ReefFace face, boolean left) {
-        SmartDashboard.putString("target face", face.toString());
-        targetField.setRobotPose(face.alignLeft);   
-
-
-        return Commands.sequence(
-            Commands.either(
-                Commands.sequence( // score
-                    new LocalSwerve(s_Swerve, left ? face.approachLeft : face.approachRight, false),
-                    //elevators.moveToNext(),
-                    new WaitCommand(0.5),
-                    new LocalSwerve(s_Swerve, left ? face.alignLeft : face.alignRight, true)
-                ),
-                Commands.sequence( // remove algae
-                    new LocalSwerve(s_Swerve, face.approachMiddle, false),
-                    new LocalSwerve(s_Swerve, face.alignMiddle, true)
-                    //elevators.moveToNext()
-                ),
-                intake::hasCoral
-            ),
-            shootCoral()
-        );
-    }
-/*
-    private Command alignLeft() {
-        SmartDashboard.putString("left face", Swerve.nearestFace(s_Swerve.getPose().getTranslation()).toString());
-        return alignReef(Swerve.nearestFace(s_Swerve.getPose().getTranslation()), true);
-    }
-
-    private Command alignRight() {
-        SmartDashboard.putString("right face",Swerve.nearestFace(s_Swerve.getPose().getTranslation()).toString());
-
-        return alignReef(Swerve.nearestFace(s_Swerve.getPose().getTranslation()), false);
-    }
-*/ 
 
     // feed - get to feeder station with pivot and elevator in place, spin up intake when close, and wait for coral sensor, stop intake and pivot to shoot
     private Command feed() {
         return elevators.moveToIntake()
-            .andThen(new WaitCommand(0.5))
+            .andThen(new WaitCommand(1.5))
             .andThen(pivot.pivotTo(Pivots.Intake))
             .andThen(intake.setIntakeSpeed(-0.2));
     }
@@ -246,7 +208,7 @@ public class RobotContainer {
             .andThen(new WaitCommand(0.5))
             .andThen(intake.setIntakeSpeed(0.0))
             .andThen(pivot.pivotTo(Pivots.Up))
-            .andThen(new WaitCommand(0.5))
+            .andThen(new WaitCommand(1.5))
             .andThen(feed())
             .andThen(colorCommand(original_color));
     }

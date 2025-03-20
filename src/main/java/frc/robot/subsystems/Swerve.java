@@ -20,6 +20,7 @@ import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveRequest.SwerveDriveBrake;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -39,7 +40,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Vision;
 import frc.robot.commands.LocalSwerve;
-
+import frc.robot.subsystems.elevator.Elevator;
 
 public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
@@ -272,59 +273,63 @@ public class Swerve extends SubsystemBase {
         return relativePosition.getAngle();
     }
 
-    public static ReefFace nearestFace(Translation2d position) {
+    public ReefFace nearestFace(Translation2d position) {
         Rotation2d reefBearing = flipIfRed(reefBearing(position));
         double bearingAngle = MathUtil.inputModulus(reefBearing.getDegrees(), -180, 180);
 
         SmartDashboard.putNumber("bearing angle", bearingAngle);
 
         if (bearingAngle > 150 || bearingAngle < -150) {
-            //goalFace = ReefFace.GH;
             return ReefFace.GH;
         } else if (bearingAngle > 90) {
-            //goalFace = ReefFace.EF;
             return ReefFace.EF;
         } else if (bearingAngle > 30) {
-            //goalFace = ReefFace.CD;
             return ReefFace.CD;
         } else if (bearingAngle > -30) {
-            //goalFace = ReefFace.AB;
             return ReefFace.AB;
         } else if (bearingAngle > -90) {
-            //goalFace = ReefFace.KL;
             return ReefFace.KL;
         } else { // bearingAngle > -150
-            //goalFace = ReefFace.IJ;
             return ReefFace.IJ;
         }
     }
 
-    private Command alignReef(boolean left) {
-        SmartDashboard.putString("align reef face", goalFace.toString());
+    private Command alignReef(boolean left, Elevator elevator) {
 
         return Commands.sequence(
-                Commands.sequence( // score
-                    new LocalSwerve(this, left ? goalFace.approachLeft : goalFace.approachRight, false),
-                    //elevators.moveToNext(),
-                    new WaitCommand(0.5),
-                    new LocalSwerve(this, left ? goalFace.alignLeft : goalFace.alignRight, true)
-                )
-            );
+            Commands.runOnce(() -> {
+                // This code will run when the command starts, so it will use the latest goalFace
+                ReefFace currentFace = this.goalFace; // Capture the current value
+                new LocalSwerve(this, left ? currentFace.approachLeft : currentFace.approachRight, false).schedule();
+            }),
+            elevator.moveToNext(),
+            // new WaitCommand(0.5),
+            Commands.runOnce(() -> {
+                // This code will run after the wait, so it will use the latest goalFace
+                ReefFace currentFace = this.goalFace; // Capture the current value
+                new LocalSwerve(this, left ? currentFace.alignLeft : currentFace.alignRight, true).schedule();
+           })
+        );
     }
 
-    public Command alignLeft() {
-        SmartDashboard.putString("align left face", goalFace.toString());
-        return alignReef(true);
+    public Command alignLeft(Elevator elevator) {
+        SmartDashboard.putString("left face", nearestFace(getPose().getTranslation()).toString());
+        return alignReef(true, elevator);
+    }
+
+    public Command alignRight(Elevator elevator) {
+        SmartDashboard.putString("right face", nearestFace(getPose().getTranslation()).toString());
+        return alignReef(false, elevator);
     }
 
     public void zeroHeading() {
         if (Robot.isRed()) {
-         //   setHeading(new Rotation2d(Math.PI));
+            // setHeading(new Rotation2d(Math.PI));
             gyro.setYaw(180);
         }
 
-          //  setHeading(new Rotation2d());
-          gyro.reset();
+        // setHeading(new Rotation2d());
+        gyro.reset();
 
     }
 
@@ -341,9 +346,6 @@ public class Swerve extends SubsystemBase {
                 },
                 this);
     }
-
-
-
 
 
     @Override
@@ -369,18 +371,16 @@ public class Swerve extends SubsystemBase {
 
         Pose2d pose = getPose();
         field.setRobotPose(pose);   
+        goalFace = nearestFace(pose.getTranslation());
 
         SmartDashboard.putString("actual pose", pose.toString());
         SmartDashboard.putString("nearest face" , nearestFace(pose.getTranslation()).toString());
-
-        goalFace = nearestFace(pose.getTranslation());
-
         SmartDashboard.putString("goal face", goalFace.toString());
 
 
         m_poseEstimator.update(getGyroYaw(), getModulePositions());
     
-
+        
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
