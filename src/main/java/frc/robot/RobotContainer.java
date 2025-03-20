@@ -23,8 +23,8 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOReal;
-import frc.robot.subsystems.led.ledSubsystem;
-import frc.robot.subsystems.led.ledSubsystem.LedMode;
+import frc.robot.subsystems.led.LedSubsystem;
+import frc.robot.subsystems.led.LedSubsystem.LedMode;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIOReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
@@ -66,7 +66,7 @@ public class RobotContainer {
     private final Elevator elevators;
     private final Intake intake;
     private final Pivot pivot;
-    private final ledSubsystem m_led = new ledSubsystem();
+    private final LedSubsystem m_led = new LedSubsystem();
     private final Field2d targetField;
     
     /* misc variables */
@@ -172,7 +172,7 @@ public class RobotContainer {
         driver.leftTrigger().whileTrue(s_Swerve.alignLeft(elevators));
         driver.rightTrigger().whileTrue(s_Swerve.alignRight(elevators));
         //driver.back().onTrue(pivot.pivotTo(Pivots.ShootL4));
-        driver.back().onTrue(pivot.pivotToOnElevator(Pivots.ShootL4, elevators.getNextStop()));
+        driver.back().onTrue(pivot.pivotToOnElevator(elevators.getNextStop()));
 
         driver.start().onTrue(feed());
 

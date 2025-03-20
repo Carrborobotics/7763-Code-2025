@@ -4,28 +4,27 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ledSubsystem extends SubsystemBase {
+public class LedSubsystem extends SubsystemBase {
 
     LedStrip ledStrip;    
-    int red, green, blue;
+    LedMode mode;
     Color primaryColor;
     Color secondaryColor;
-    LedMode mode;
-    //private FireEffect fireEffect;
+
     private FireEffect fireLeftEffect;
     private FireEffect fireRightEffect;
     private PacmanEffect pacmanEffect;
 
-    public ledSubsystem() {
+    public LedSubsystem() {
         ledStrip = new LedStrip();
-        int numLeds = ledStrip.getBufferLength();
-
         mode = LedMode.SOLID;
         primaryColor = Color.kBlack;
         secondaryColor = Color.kBlack;
-        //fireEffect = new FireEffect(ledStrip.getBufferLength());
-        fireRightEffect = new FireEffect(numLeds/2, 0, numLeds/2-1, true);
+
+        int numLeds = ledStrip.getBufferLength();
+
         fireLeftEffect = new FireEffect(numLeds/2, numLeds/2, numLeds-1, false);
+        fireRightEffect = new FireEffect(numLeds/2, 0, numLeds/2-1, true);
         pacmanEffect = new PacmanEffect(ledStrip.getBufferLength());
     }
 
@@ -46,8 +45,9 @@ public class ledSubsystem extends SubsystemBase {
     public void periodic() {
         dispatchLedEffect(mode, primaryColor);
         ledStrip.repaint();
-        SmartDashboard.putString("led/colorRgb", this.primaryColor.toString());
         SmartDashboard.putString("led/mode", this.mode.toString());
+        SmartDashboard.putString("led/primary_color", this.primaryColor.toString());
+        SmartDashboard.putString("led/secondary_color", this.secondaryColor.toString());
     }
 
     public void dispatchLedEffect(LedMode mode, Color primaryColor) {
@@ -110,9 +110,6 @@ public class ledSubsystem extends SubsystemBase {
             ledStrip.setPixelMix(i, c1, c2, ratio);
         }
     }
-
-    
-    
 
     public static enum LedMode {
         SOLID,
