@@ -21,8 +21,7 @@ public class LedStripDemo {
     private FireEffect fireLeftEffect;
     private FireEffect fireRightEffect;
     private BubbleEffect bubbleEffect;
-    //private BubbleEffect bubbleRightEffect;
-    //private PacmanEffect pacmanEffect;
+    private PacmanEffect pacmanEffect;
 
     public LedStripDemo(LedMode mode, Color primaryColor, Color secondaryColor) {
         /*-----------------------------------------------------------*/
@@ -42,7 +41,7 @@ public class LedStripDemo {
         bubbleEffect = new BubbleEffect(numLeds, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
         //bubbleRightEffect = new BubbleEffect(numLeds/2, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
 
-        //pacmanEffect = new PacmanEffect(ledStrip.getBufferLength());
+        pacmanEffect = new PacmanEffect(ledStrip.getBufferLength());
 
         // 20ms to match Timer in real roboRio
         timer = new Timer(20, new ActionListener() {
@@ -63,7 +62,7 @@ public class LedStripDemo {
     // display demo gui (MAIN)
     public static void main(String[] args) {
         // Default values if no arguments are provided
-        LedMode mode = LedMode.FIRE;
+        LedMode mode = LedMode.FIRE2;
         Color primaryColor = Color.RED;
         Color secondaryColor = Color.GREEN;
 
@@ -132,19 +131,18 @@ public class LedStripDemo {
         } else if (mode == LedMode.WAVERB) {
             waveEffectRedBlue();
         } else if (mode == LedMode.FIRE) {
-            // one-sided fire // fireEffect.update(ledStrip, Color.WHITE, Color.YELLOW, Color.RED, Color.BLACK);
-
+            // one-sided fire // 
+            fireEffect.update(ledStrip, Color.WHITE, Color.YELLOW, Color.RED, Color.BLACK);
+        } else if (mode == LedMode.FIRE2) {
+            // two sided fire //
             fireLeftEffect.update(ledStrip, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
-            fireRightEffect.update(ledStrip, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
-            
+            fireRightEffect.update(ledStrip, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);            
         } else if (mode == LedMode.BUBBLE) {
             // one-sided fire // fireEffect.update(ledStrip, Color.WHITE, Color.YELLOW, Color.RED, Color.BLACK);
-            bubbleEffect.update(ledStrip);//, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
-
-            //bubbleRightEffect.update(ledStrip, Color.GREEN, Color.CYAN, Color.BLUE, Color.BLACK);
+            bubbleEffect.update(ledStrip);
             
-        // } else if (mode == LedMode.PACMAN) {
-        //     pacmanEffect.update(ledStrip);
+        } else if (mode == LedMode.PACMAN) {
+             pacmanEffect.update(ledStrip);
         }
     }
     
@@ -191,6 +189,7 @@ public class LedStripDemo {
         WAVE,
         WAVERB,
         FIRE,
+        FIRE2,
         PACMAN,
         BUBBLE,
         FLASH;
