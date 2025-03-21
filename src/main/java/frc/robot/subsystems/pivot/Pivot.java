@@ -92,8 +92,9 @@ public class Pivot extends SubsystemBase {
         return Commands.runOnce(() -> this.setpoint = pivotsPos.get(pivot));
     }
 
-    /*
-     * Turn pivot to the correct angle based on the elevator setting.
+    /**
+     * Turn pivot to the correct Shoot-angle based on the elevator setting.
+     * @param stop the ElevatorStop
      */
     public Command pivotToOnElevator(ElevatorStop stop) {
         return Commands.runOnce( 

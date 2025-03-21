@@ -67,7 +67,7 @@ public class IntakeIOReal implements IntakeIO {
     }
 
     @Override
-    public void setSpeed(double speed){
+    public void setSpeed(double speed) {
         intakeMotor.set(speed);
     }
 
