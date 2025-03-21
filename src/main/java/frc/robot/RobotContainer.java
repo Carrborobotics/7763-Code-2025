@@ -111,7 +111,6 @@ public class RobotContainer {
 
         // set color at startup
         original_color = Robot.isRed() ? redBumper : blueBumper;
-        
         m_led.setColor(original_color);
 
         targetField = new Field2d();
@@ -163,7 +162,7 @@ public class RobotContainer {
         driver.b().onTrue(elevators.setNextStopCommand(ElevatorStop.L4).andThen(ledCommand(LedMode.FIRE, Color.kRed, Color.kPurple)));
 
         driver.leftBumper().onTrue(elevators.moveToNext());
-        driver.rightBumper().onTrue(intake.setIntakeSpeed(0.4));
+        driver.rightBumper().onTrue(intake.ejectCoralCmd());
 
         driver.leftTrigger().whileTrue(s_Swerve.alignLeft(elevators));
         driver.rightTrigger().whileTrue(s_Swerve.alignRight(elevators));
@@ -200,9 +199,9 @@ public class RobotContainer {
     // scoreCoral - aligns, elevates, ensure proper position, outtake, waits for empty, stop intake, pivot up, lowers to safe, pivot to feed 
     private Command shootCoral() {
         return (colorCommand(Color.kPurple))
-            .andThen(intake.setIntakeSpeed(0.4))
+            .andThen(intake.ejectCoralCmd())
             .andThen(new WaitCommand(0.5))
-            .andThen(intake.setIntakeSpeed(0.0))
+            .andThen(intake.stopCmd())
             .andThen(pivot.pivotTo(Pivots.Up))
             .andThen(new WaitCommand(1.5))
             .andThen(feed())
@@ -210,7 +209,7 @@ public class RobotContainer {
     }
 
     public Command autoShootCoral(){
-        return intake.setIntakeSpeed(0.4)
+        return intake.ejectCoralCmd()
                  .andThen(new WaitCommand(1.0))
                  .andThen(pivot.pivotTo(Pivots.Up)); 
      }

@@ -54,15 +54,26 @@ public class Intake extends SubsystemBase{
         this.goalVisualizer = new IntakeVisualizer("Goal", Color.kGreen);
     }
 
-    public Command setIntakeSpeed(double speed){
+    public Command setIntakeSpeed(double speed) {
         return runOnce(() -> this.io.setSpeed(speed));
     }
 
-    public boolean hasCoral(){
-        if(this.inputs.supplyCurrent.gt(Amps.of(6.5))){
-            return true;
-        }
-        return false;
+    /** 
+     * Command to shoot out the coral
+     */
+    public Command ejectCoralCmd() {
+        return this.setIntakeSpeed(0.4);
+    }
+
+    /**
+     *  Command to stop the intake
+     */ 
+    public Command stopCmd() {
+        return this.setIntakeSpeed(0);
+    }
+
+    public boolean hasCoral() {
+        return this.inputs.supplyCurrent.gt(Amps.of(6.5));
     }
 
     @Override
