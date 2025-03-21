@@ -1,14 +1,14 @@
 package frc.robot.subsystems.intake;
 
-import edu.wpi.first.units.measure.Angle;
+// import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+// import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
-import frc.robot.subsystems.intake.IntakeIOInputsAutoLogged;
-import frc.robot.subsystems.intake.IntakeVisualizer;
+// import frc.robot.subsystems.intake.IntakeIOInputsAutoLogged;
+// import frc.robot.subsystems.intake.IntakeVisualizer;
 import frc.robot.util.LoggedTunableNumber;
 import static edu.wpi.first.units.Units.*;
 

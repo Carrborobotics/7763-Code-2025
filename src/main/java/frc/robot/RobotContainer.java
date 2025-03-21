@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+//import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -70,13 +70,12 @@ public class RobotContainer {
     private final LedSubsystem m_led = new LedSubsystem();
     private final Field2d targetField;
     
-    /* misc variables */
-    public boolean leftSide;
+    /* Alliance colors */
+    private final Color redBumper = Color.kDarkRed;
+    private final Color blueBumper = Color.kDarkBlue;
     private Color original_color;
 
-    // blue bumper = 1c3c7c (28,60,124)
-    // red bumper = 7a0808 (128,8,8)
-    /**
+      /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
@@ -111,8 +110,6 @@ public class RobotContainer {
         );
 
         // set color at startup
-        Color redBumper = Color.kRed; //new Color(128,8,8);
-        Color blueBumper = Color.kBlue; //new Color(28,60,124);
         original_color = Robot.isRed() ? redBumper : blueBumper;
         
         m_led.setColor(original_color);
@@ -124,8 +121,6 @@ public class RobotContainer {
             setReefCommands(face);
         }
        
-        leftSide = true;
-
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
         //SmartDashboard.putString("approach right", Swerve.nearestFace(s_Swerve.getPose().getTranslation()).approachRight.toString());
@@ -250,10 +245,6 @@ public class RobotContainer {
     private void setReefCommands(ReefFace face) {
         pullAlgaeLeftCommands.put(face, pullAlgae(face));
         pullAlgaeRightCommands.put(face, pullAlgae(face));
-    }
-
-    public void setSide(boolean left){
-        leftSide = left;
     }
 
     /**
