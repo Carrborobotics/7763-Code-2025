@@ -33,6 +33,17 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "Intake On",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.9869706840390879,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake On"
+        }
+      }
+    },
+    {
       "name": "Pivot to Shoot",
       "waypointRelativePos": 0.3,
       "endWaypointRelativePos": null,

@@ -22,7 +22,7 @@ public class FireEffect {
         this.reverse = reverse; 
         this.numLeds = numLeds;
         heat = new byte[numLeds];
-        cooling = 55;
+        cooling = 150; //55
         sparking = 120;
     }
 

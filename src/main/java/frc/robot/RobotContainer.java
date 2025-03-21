@@ -7,6 +7,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -176,7 +177,7 @@ public class RobotContainer {
 
         driver.start().onTrue(feed());
 
-        Trigger coralSensed = new Trigger(() -> intake.hasCoral());
+        Trigger coralSensed = new Trigger(() -> intake.hasCoral()).debounce(0.5, DebounceType.kBoth);
   
         coralSensed.onTrue(
             colorCommand(Color.kCoral).andThen(pivot.pivotTo(Pivots.Shoot))

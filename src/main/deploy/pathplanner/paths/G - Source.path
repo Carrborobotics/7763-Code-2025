@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.18577806122449,
-        "y": 5.9389349489795915
+        "x": 7.603507653061225,
+        "y": 5.737468112244898
       },
       "isLocked": false,
       "linkedName": null
@@ -35,7 +35,7 @@
     {
       "name": "Feed",
       "waypointRelativePos": 0.2,
-      "endWaypointRelativePos": null,
+      "endWaypointRelativePos": 1.0,
       "command": {
         "type": "named",
         "data": {

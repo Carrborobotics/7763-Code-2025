@@ -18,8 +18,8 @@ public class LocalSwerve extends Command{
     private final boolean precise;
     private final double positionIZone = 4;
     private final double positionKS = 0.02;
-    private final double positionTolerance = 5; // 1
-    private final double roughPositionTolerance = 7; // inches
+    private final double positionTolerance = 1; // 1
+    private final double roughPositionTolerance = 4; // inches
     private final double rotationKS = 0.02;
     private final double rotationIZone = 4;
     private final double maxSpeed = Constants.Swerve.maxSpeed / 5.0; // 3.0
@@ -28,8 +28,8 @@ public class LocalSwerve extends Command{
     private final double rotationTolerance = 0.5; // degrees
     private final double roughRotatationTolerance = 1.5; // degrees
     
-    private final PIDController xPID = new PIDController(Constants.Swerve.driveKP/1.5, 0, 0);
-    private final PIDController yPID = new PIDController(Constants.Swerve.driveKP/1.5, 0, 0);
+    private final PIDController xPID = new PIDController(Constants.Swerve.driveKP/2, 0, 0);
+    private final PIDController yPID = new PIDController(Constants.Swerve.driveKP/2, 0, 0);
     private final PIDController rPID = new PIDController(0.1, 0, 0);
 
     public LocalSwerve(Swerve m_swerve, Pose2d targetPose, boolean precise){
