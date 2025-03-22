@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import frc.robot.Vision;
 import frc.robot.commands.LocalSwerve;
 import frc.robot.subsystems.elevator.Elevator;
@@ -300,14 +301,14 @@ public class Swerve extends SubsystemBase {
             Commands.runOnce(() -> {
                 // This code will run when the command starts, so it will use the latest goalFace
                 ReefFace currentFace = this.goalFace; // Capture the current value
-                new LocalSwerve(this, left ? currentFace.approachLeft : currentFace.approachRight, false).schedule();
+                new LocalSwerve(this, left ? currentFace.approachLeft : currentFace.approachRight, false).withTimeout(5).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
             }),
             elevator.moveToNext(),
             // new WaitCommand(0.5),
             Commands.runOnce(() -> {
                 // This code will run after the wait, so it will use the latest goalFace
                 ReefFace currentFace = this.goalFace; // Capture the current value
-                new LocalSwerve(this, left ? currentFace.alignLeft : currentFace.alignRight, true).schedule();
+                new LocalSwerve(this, left ? currentFace.alignLeft : currentFace.alignRight, true).withTimeout(5).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
            })
         );
     }
