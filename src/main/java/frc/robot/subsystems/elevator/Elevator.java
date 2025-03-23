@@ -90,14 +90,12 @@ public class Elevator extends SubsystemBase {
             this.io.runVolts(Volts.of(2));
         } */
         return Commands.runOnce(() ->  this.setpoint = elevatorHeights.get(this.nextStop));
-        //return Commands.runOnce(() ->  this.setpoint = elevatorHeights.get(stop));
     }
     public Command moveToIntake() {
 
           return Commands.runOnce(() ->  this.setpoint = elevatorHeights.get(ElevatorStop.INTAKE));
     }
     public void moveToL4() {
-
         this.setpoint = elevatorHeights.get(ElevatorStop.L4);
     }
 

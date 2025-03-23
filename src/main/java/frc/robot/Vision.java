@@ -87,6 +87,8 @@ import java.util.List;
              if(!visionEst.isPresent()) {
                 continue;
              }
+             SmartDashboard.putBoolean("vision/has tag?", !visionEst.isEmpty());
+
              lastPose = visionEst.get().estimatedPose.toPose2d();
              updateEstimationStdDevs(visionEst, change.getTargets());
          }
@@ -117,7 +119,6 @@ import java.util.List;
                  var tagPose = photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
 
                  SmartDashboard.putNumber("vision/id number", tgt.getFiducialId());
-                 SmartDashboard.putBoolean("vision/has tag?", tgt.getFiducialId() > 0);
                  SmartDashboard.putString("vision/pose", tagPose.toString());
                  
                  if (tagPose.isEmpty()) continue;
