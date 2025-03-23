@@ -45,8 +45,30 @@ import frc.robot.commands.LocalSwerve;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.led.LedSubsystem;
 import frc.robot.subsystems.led.LedSubsystem.LedMode;
+import frc.robot.util.LoggedTunableNumber;
+import edu.wpi.first.math.controller.PIDController;
 
 public class Swerve extends SubsystemBase {
+
+
+    private static final LoggedTunableNumber kPx = new LoggedTunableNumber("LocalSwerve/Gains/kPx", 0.02);
+    private static final LoggedTunableNumber kIx = new LoggedTunableNumber("LocalSwerve/Gains/kIx", 0.0);
+    private static final LoggedTunableNumber kDx = new LoggedTunableNumber("LocalSwerve/Gains/kDx", 0.0);
+    private static final LoggedTunableNumber kPr = new LoggedTunableNumber("LocalSwerve/Gains/kPx", 0.005);
+    private static final LoggedTunableNumber kIr = new LoggedTunableNumber("LocalSwerve/Gains/kIx", 0.0);
+    private static final LoggedTunableNumber kDr = new LoggedTunableNumber("LocalSwerve/Gains/kDx", 0.0);
+    public static final LoggedTunableNumber maxSpeed = new LoggedTunableNumber("LocalSwerve/MaxSpd",  Constants.Swerve.maxSpeed / 2.5);
+    public static final LoggedTunableNumber maxAngularVelocity = new LoggedTunableNumber("LocalSwerve/MaxAng",  Constants.Swerve.maxAngularVelocity / 4.0);
+    private static final LoggedTunableNumber rotationTolerance = new LoggedTunableNumber("LocalSwerve/Tol/kTr", 1.0);
+    private static final LoggedTunableNumber positionTolerance = new LoggedTunableNumber("LocalSwerve/Tol/kTp", 0.5);
+    public final PIDController xPID, yPID, rPID; 
+
+    public final double positionIZone = 4;
+    public final double rotationIZone = 4;
+    public final double positionKS = 0.02;
+    public final double rotationKS = 0.02;
+
+
     public SwerveModule[] mSwerveMods;
     public boolean doRejectUpdate = false;
 
@@ -58,6 +80,14 @@ public class Swerve extends SubsystemBase {
     public ReefFace goalFace;
 
     public Swerve() {
+
+        xPID = new PIDController(kPx.get(), kIx.get(), kDx.get()); 
+        yPID = new PIDController(kPx.get(), kIx.get(), kDx.get());
+        rPID = new PIDController(kPr.get(), kIr.get(), kDr.get()); 
+        xPID.setTolerance(positionTolerance.get());
+        yPID.setTolerance(positionTolerance.get());
+        rPID.setTolerance(rotationTolerance.get());
+    
         gyro = new Pigeon2(Constants.Swerve.pigeonID, Constants.Swerve.CanBus);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
