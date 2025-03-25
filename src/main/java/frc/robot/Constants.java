@@ -341,8 +341,8 @@ public final class Constants {
     } */
 
     public static final Transform3d kRobotToCam = new Transform3d(
-            new Translation3d(Units.inchesToMeters(30.0/2.0 - 6.65), Units.inchesToMeters(11.84), Units.inchesToMeters(17)), // X and Y were swapped?
-                  new Rotation3d(Units.degreesToRadians(0.0), Units.degreesToRadians(15), Units.degreesToRadians(-25)));
+            new Translation3d(Units.inchesToMeters(30.0/2.0), Units.inchesToMeters(9.15), Units.inchesToMeters(7.25)), // X and Y were swapped?
+                  new Rotation3d(Units.degreesToRadians(0.0), Units.degreesToRadians(-10), Units.degreesToRadians(0)));
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
     }
