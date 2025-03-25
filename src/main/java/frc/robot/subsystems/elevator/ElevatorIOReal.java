@@ -1,6 +1,5 @@
 package frc.robot.subsystems.elevator;
 
-
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -11,7 +10,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import frc.robot.Constants;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
+// import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.Voltage;

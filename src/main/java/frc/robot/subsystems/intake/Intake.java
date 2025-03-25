@@ -1,14 +1,14 @@
 package frc.robot.subsystems.intake;
 
-import edu.wpi.first.units.measure.Angle;
+// import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+// import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
-import frc.robot.subsystems.intake.IntakeIOInputsAutoLogged;
-import frc.robot.subsystems.intake.IntakeVisualizer;
+// import frc.robot.subsystems.intake.IntakeIOInputsAutoLogged;
+// import frc.robot.subsystems.intake.IntakeVisualizer;
 import frc.robot.util.LoggedTunableNumber;
 import static edu.wpi.first.units.Units.*;
 
@@ -54,15 +54,26 @@ public class Intake extends SubsystemBase{
         this.goalVisualizer = new IntakeVisualizer("Goal", Color.kGreen);
     }
 
-    public Command setIntakeSpeed(double speed){
+    public Command setIntakeSpeed(double speed) {
         return runOnce(() -> this.io.setSpeed(speed));
     }
 
-    public boolean hasCoral(){
-        if(this.inputs.supplyCurrent.gt(Amps.of(6.5))){
-            return true;
-        }
-        return false;
+    /** 
+     * Command to shoot out the coral
+     */
+    public Command ejectCoralCmd() {
+        return this.setIntakeSpeed(0.4);
+    }
+
+    /**
+     *  Command to stop the intake
+     */ 
+    public Command stopCmd() {
+        return this.setIntakeSpeed(0);
+    }
+
+    public boolean hasCoral() {
+        return this.inputs.supplyCurrent.gt(Amps.of(6.5));
     }
 
     @Override

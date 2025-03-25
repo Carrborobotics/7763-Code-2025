@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+//import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -70,13 +70,12 @@ public class RobotContainer {
     private final LedSubsystem m_led = new LedSubsystem();
     private final Field2d targetField;
     
-    /* misc variables */
-    public boolean leftSide;
+    /* Alliance colors */
+    private final Color redBumper = Color.kDarkRed;
+    private final Color blueBumper = Color.kDarkBlue;
     private Color original_color;
 
-    // blue bumper = 1c3c7c (28,60,124)
-    // red bumper = 7a0808 (128,8,8)
-    /**
+      /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
@@ -111,10 +110,7 @@ public class RobotContainer {
         );
 
         // set color at startup
-        Color redBumper = Color.kRed; //new Color(128,8,8);
-        Color blueBumper = Color.kBlue; //new Color(28,60,124);
         original_color = Robot.isRed() ? redBumper : blueBumper;
-        
         m_led.setColor(original_color);
 
         targetField = new Field2d();
@@ -124,8 +120,6 @@ public class RobotContainer {
             setReefCommands(face);
         }
        
-        leftSide = true;
-
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
         //SmartDashboard.putString("approach right", Swerve.nearestFace(s_Swerve.getPose().getTranslation()).approachRight.toString());
@@ -180,7 +174,7 @@ public class RobotContainer {
                 .andThen(ledCommand(LedMode.FIRE, Color.kBlack, Color.kBlack)));
 
         driver.leftBumper().onTrue(elevators.moveToNext());
-        driver.rightBumper().onTrue(intake.setIntakeSpeed(0.3));
+        driver.rightBumper().onTrue(intake.ejectCoralCmd());
 
         driver.leftTrigger().whileTrue(s_Swerve.alignLeft(elevators));
         driver.rightTrigger().whileTrue(s_Swerve.alignRight(elevators));
@@ -217,9 +211,9 @@ public class RobotContainer {
     // scoreCoral - aligns, elevates, ensure proper position, outtake, waits for empty, stop intake, pivot up, lowers to safe, pivot to feed 
     private Command shootCoral() {
         return (colorCommand(Color.kPurple))
-            .andThen(intake.setIntakeSpeed(0.4))
+            .andThen(intake.ejectCoralCmd())
             .andThen(new WaitCommand(0.5))
-            .andThen(intake.setIntakeSpeed(0.0))
+            .andThen(intake.stopCmd())
             .andThen(pivot.pivotTo(Pivots.Up))
             .andThen(new WaitCommand(1.5))
             .andThen(feed())
@@ -227,7 +221,7 @@ public class RobotContainer {
     }
 
     public Command autoShootCoral(){
-        return intake.setIntakeSpeed(0.4)
+        return intake.ejectCoralCmd()
                  .andThen(new WaitCommand(1.0))
                  .andThen(pivot.pivotTo(Pivots.Up)); 
      }
@@ -262,10 +256,6 @@ public class RobotContainer {
     private void setReefCommands(ReefFace face) {
         pullAlgaeLeftCommands.put(face, pullAlgae(face));
         pullAlgaeRightCommands.put(face, pullAlgae(face));
-    }
-
-    public void setSide(boolean left){
-        leftSide = left;
     }
 
     /**
