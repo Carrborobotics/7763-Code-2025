@@ -53,6 +53,7 @@ import java.util.List;
      private final PhotonPoseEstimator photonEstimator;
      private Matrix<N3, N1> curStdDevs;
      private AprilTagFieldLayout kTagLayout;
+     //private Pose2d lastPose = new Pose2d();
 
  
      // Simulation
@@ -83,6 +84,7 @@ import java.util.List;
          Optional<EstimatedRobotPose> visionEst = Optional.empty();
          for (var change : camera.getAllUnreadResults()) {
              visionEst = photonEstimator.update(change);
+             //lastPose = visionEst.get().estimatedPose.toPose2d();
              updateEstimationStdDevs(visionEst, change.getTargets());
          }
          return visionEst;
@@ -151,6 +153,9 @@ import java.util.List;
          return curStdDevs;
      }
  
+ //    public Pose2d lastPose(){
+  //      return lastPose;
+  //   }
      // ----- Simulation
  
      public void simulationPeriodic(Pose2d robotSimPose) {

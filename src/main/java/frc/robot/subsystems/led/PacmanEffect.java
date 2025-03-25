@@ -6,7 +6,7 @@ public class PacmanEffect {
     private int pacWidth = 3; // pixel width of each object, must be larger than 1
     private double pacmanPosition;
     private double[] ghostPositions;
-    private int pelletPosition = 5; // Pellet near the left
+    private int pelletPosition = 13; // Pellet near the left
     private boolean pelletEaten = false;
     private boolean pacmanEating = false;
     private double pacmanNormalSpeed = 0.5; // Pixels per second
@@ -59,9 +59,7 @@ public class PacmanEffect {
         pacmanPosition += pacmanSpeed * pacmanDirection;
 
         // Limit pacman to the strip length.
-        if (pacmanPosition < 0) {
-            pacmanPosition = 0; // this should never happen
-        } else if (pacmanPosition >= numLeds) {
+        if (pacmanPosition < 0 || pacmanPosition >= numLeds) {
             resetPositions();
         }
 

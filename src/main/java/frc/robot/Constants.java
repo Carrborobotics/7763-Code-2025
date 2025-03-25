@@ -72,9 +72,9 @@ public final class Constants {
 
         public static final double robotFrameLength = Units.inchesToMeters(30);
         public static final double bumperWidth = Units.inchesToMeters(3);
-        public static final double reefStandoff = Units.inchesToMeters(1.0);
+        public static final double reefStandoff = Units.inchesToMeters(0);
         public static final double reefOffset = robotFrameLength / 2.0 + bumperWidth + reefStandoff;
-        public static final double reefExtraOffset = Units.inchesToMeters(16.0); // reef wood to outside of tape line
+        public static final double reefExtraOffset = Units.inchesToMeters(18.0); // reef wood to outside of tape line
         public static final double bonusStandoff = Units.inchesToMeters(4.0);
 
         // Locations from the Blue Alliance perspective
@@ -86,8 +86,8 @@ public final class Constants {
 
         // Offset to the reef face, not at the branches, but on the faces directly in front
         public static final Translation2d centerOffset = new Translation2d(reefToFaceDistance + reefOffset, 0.0);
-        private static final Translation2d leftOffset = new Translation2d(reefToFaceDistance + reefOffset, -branchSeparation / 2.0);
-        private static final Translation2d rightOffset = new Translation2d(reefToFaceDistance + reefOffset, branchSeparation / 2.0);
+        private static final Translation2d leftOffset = new Translation2d(reefToFaceDistance + reefOffset, 1.15 * -branchSeparation / 2.0);
+        private static final Translation2d rightOffset = new Translation2d(reefToFaceDistance + reefOffset, 1.13 * branchSeparation / 2.0);
         private static final Translation2d extraOffset = new Translation2d(reefExtraOffset, 0.0);
         private static final Translation2d centerApproachOffset = centerOffset.plus(extraOffset);
         private static final Translation2d leftApproachOffset = leftOffset.plus(extraOffset);
@@ -209,7 +209,7 @@ public final class Constants {
         public static final boolean driveEnableCurrentLimit = false;
 
         /*
-         * These values are used by the drive falcon to ramp in open loop and closed
+         * These values are used by the dr`eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`qffgqggFdive falcon to ramp in open loop and closed
          * loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc
          */

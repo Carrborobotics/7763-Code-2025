@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.util.Color;
 public class LedStrip {
     
     private final AddressableLED m_led = new AddressableLED(2); // PWM port 0
-    private final AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(200); // fix to length
+    private final AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(174); // fix to length
 
     public LedStrip () {
         m_led.setLength(m_ledBuffer.getLength());
@@ -55,10 +55,12 @@ public class LedStrip {
     // set a pixel based on a blend of colors c1 & c2 with a ratio (0..1)
     // which is a percentage of C2.
     public void setPixelMix(int i, Color c1, Color c2, double ratio) {
-        double red = (c1.red * (1 - ratio)) + (c2.red * ratio);
-        double green = (c1.green * (1 - ratio)) + (c2.green * ratio);
-        double blue = (c1.blue * (1 - ratio)) + (c2.blue * ratio);
-        setPixel(i, new Color(red, green, blue));
+        if (i < getBufferLength()) {
+            double red = (c1.red * (1 - ratio)) + (c2.red * ratio);
+            double green = (c1.green * (1 - ratio)) + (c2.green * ratio);
+            double blue = (c1.blue * (1 - ratio)) + (c2.blue * ratio);
+            setPixel(i, new Color(red, green, blue));
+        }
     }
 
     public int getBufferLength() {

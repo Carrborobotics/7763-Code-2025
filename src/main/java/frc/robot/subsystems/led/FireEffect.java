@@ -12,21 +12,21 @@ public class FireEffect {
     private int numLeds;
     private int low;
     private int high;
-    private boolean reverse;
+    //private boolean reverse;
     
-    public FireEffect(int numLeds, int low, int high, boolean reverse) {
+    public FireEffect(int numLeds, int low, int high) {
         // seed the random number so if we instantiate two of these they look symmetric
         random = new Random(12345);
         this.low = low;
         this.high = high;
-        this.reverse = reverse; 
+        //this.reverse = reverse;
         this.numLeds = numLeds;
         heat = new byte[numLeds];
-        cooling = 150; //55
+        cooling = 80; //55;
         sparking = 120;
     }
 
-    public void update(LedStrip ledStrip, Color hot2, Color hot1, Color hot0, Color dark) {
+    public void update(LedStrip ledStrip, Color hot2, Color hot1, Color hot0, Color dark, boolean reverse) {
         int cooldown;
 
         // Step 1. Cool down every cell a little

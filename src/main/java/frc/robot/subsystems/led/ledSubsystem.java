@@ -14,18 +14,23 @@ public class LedSubsystem extends SubsystemBase {
     private FireEffect fireLeftEffect;
     private FireEffect fireRightEffect;
     private PacmanEffect pacmanEffect;
+    private final int firelow = 7;
+    private final int midlow = 64;
+    private final int midhigh = 118;
+    private final int firehigh = 174;
+
 
     public LedSubsystem() {
         ledStrip = new LedStrip();
         mode = LedMode.SOLID;
         primaryColor = Color.kBlack;
         secondaryColor = Color.kBlack;
+        
+        fireRightEffect = new FireEffect(57, firelow, midlow); // vertical portion of the strip is 57 pixels high
+        
+        fireLeftEffect = new FireEffect(57, 118, 173);
 
-        int numLeds = ledStrip.getBufferLength();
-
-        fireLeftEffect = new FireEffect(numLeds/2, numLeds/2, numLeds-1, false);
-        fireRightEffect = new FireEffect(numLeds/2, 0, numLeds/2-1, true);
-        pacmanEffect = new PacmanEffect(ledStrip.getBufferLength());
+        pacmanEffect = new PacmanEffect(170);
     }
 
     // setter for current primary Color
@@ -64,10 +69,14 @@ public class LedSubsystem extends SubsystemBase {
         } else if (mode == LedMode.FIRE) {
             // one-sided fire // 
             //fireEffect.update(ledStrip, Color.WHITE, Color.YELLOW, Color.RED, Color.BLACK);
-            
-            // two-sided fire in reef themed colors//
-            fireLeftEffect.update(ledStrip, Color.kGreen, Color.kCyan, Color.kBlue, Color.kBlack);
-            fireRightEffect.update(ledStrip, Color.kGreen, Color.kCyan, Color.kBlue, Color.kBlack);
+            solid(Color.kOrange, midlow, midhigh);
+            fireLeftEffect.update(ledStrip, Color.kWhite, Color.kYellow, Color.kRed, Color.kBlack, true);
+            fireRightEffect.update(ledStrip, Color.kWhite, Color.kYellow, Color.kRed, Color.kBlack, false);
+        } else if (mode == LedMode.WATER) {
+            // two-sided fire in reef themed colors to look like water//
+            solid(Color.kBlue, midlow, midhigh);
+            fireLeftEffect.update(ledStrip, Color.kPurple, Color.kGreen, Color.kBlue, Color.kBlack, false);
+            fireRightEffect.update(ledStrip, Color.kGreen, Color.kPurple, Color.kBlue, Color.kBlack, true);
 
         } else if (mode == LedMode.PACMAN) {
             pacmanEffect.update(ledStrip);
@@ -75,6 +84,13 @@ public class LedSubsystem extends SubsystemBase {
    
     }
     
+
+    private void solid(Color color, int low, int high) {
+        for (var i = low; i < high; i++) {
+            ledStrip.setPixel(i, color);
+        }
+    }
+
     private void solid(Color color) {
         if (color != null) {
             for (var i = 0; i < ledStrip.getBufferLength(); i++) {
@@ -118,6 +134,7 @@ public class LedSubsystem extends SubsystemBase {
         WAVE2,
         FLASH,
         PACMAN,
+        WATER,
         FIRE;
     }
     

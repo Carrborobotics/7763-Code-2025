@@ -162,13 +162,25 @@ public class RobotContainer {
 
         driver.povUp().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));        
         driver.povDown().onTrue(s_Swerve.resetModulesToAbsolute());
-        driver.a().onTrue(elevators.setNextStopCommand(ElevatorStop.L1).andThen(ledCommand(LedMode.WAVE, Color.kGreen, Color.kBlue)));
-        driver.x().onTrue(elevators.setNextStopCommand(ElevatorStop.L2).andThen(ledCommand(LedMode.WAVE2, Color.kBlue, Color.kPink)));
-        driver.y().onTrue(elevators.setNextStopCommand(ElevatorStop.L3).andThen(ledCommand(LedMode.WAVE2, Color.kPurple, Color.kOrange)));
-        driver.b().onTrue(elevators.setNextStopCommand(ElevatorStop.L4).andThen(ledCommand(LedMode.FIRE, Color.kRed, Color.kPurple)));
+
+
+        driver.a().onTrue(elevators.setNextStopCommand(ElevatorStop.L1)
+                .andThen(ledCommand(LedMode.SOLID, Color.kGreen, Color.kBlue)));
+                //.andThen(ledCommand(LedMode.WAVE, Color.kGreen, Color.kBlue)));
+
+        driver.x().onTrue(elevators.setNextStopCommand(ElevatorStop.L2)
+                .andThen(ledCommand(LedMode.WAVE2, Color.kBlue, Color.kPink)));
+
+        driver.y().onTrue(elevators.setNextStopCommand(ElevatorStop.L3)
+                .andThen(ledCommand(LedMode.WATER, Color.kBlack, Color.kBlack)));
+
+                //.andThen(ledCommand(LedMode.WAVE2, Color.kPurple, Color.kOrange)));
+
+        driver.b().onTrue(elevators.setNextStopCommand(ElevatorStop.L4)
+                .andThen(ledCommand(LedMode.FIRE, Color.kBlack, Color.kBlack)));
 
         driver.leftBumper().onTrue(elevators.moveToNext());
-        driver.rightBumper().onTrue(intake.setIntakeSpeed(0.4));
+        driver.rightBumper().onTrue(intake.setIntakeSpeed(0.3));
 
         driver.leftTrigger().whileTrue(s_Swerve.alignLeft(elevators));
         driver.rightTrigger().whileTrue(s_Swerve.alignRight(elevators));

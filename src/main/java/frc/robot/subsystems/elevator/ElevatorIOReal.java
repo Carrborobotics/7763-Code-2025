@@ -43,8 +43,8 @@ public class ElevatorIOReal implements ElevatorIO {
         elevatorLeftConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         elevatorLeftConfig.closedLoop.pid(0.350, 0.0, 0.0); // 0.2515, 0.0, 0.0
         elevatorLeftConfig.closedLoop.maxMotion.allowedClosedLoopError(0.1); //0.5
-        elevatorLeftConfig.closedLoop.maxMotion.maxVelocity(8000); //8000
-        elevatorLeftConfig.closedLoop.maxMotion.maxAcceleration(2700);//2000
+        elevatorLeftConfig.closedLoop.maxMotion.maxVelocity(4000); //8000
+        elevatorLeftConfig.closedLoop.maxMotion.maxAcceleration(3500);//2000
 
         elevatorRightConfig.follow(Constants.CANConstants.elevatorLeftId,true);
 
