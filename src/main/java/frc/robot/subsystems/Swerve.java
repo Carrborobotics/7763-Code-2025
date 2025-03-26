@@ -363,6 +363,8 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("limelight/TA", LimelightHelpers.getTA("limelight"));
         SmartDashboard.putNumber("limelight/TY", LimelightHelpers.getTY("limelight"));
 
+        m_poseEstimator.update(getGyroYaw(), getModulePositions());
+
         var visionEst = vision.getEstimatedGlobalPose();
         visionEst.ifPresent(
                 est -> {
@@ -383,11 +385,7 @@ public class Swerve extends SubsystemBase {
 
         SmartDashboard.putString("actual pose", pose.toString());
         SmartDashboard.putString("nearest face" , nearestFace(pose.getTranslation()).toString());
-        SmartDashboard.putString("goal face", goalFace.toString());
-
-
-        m_poseEstimator.update(getGyroYaw(), getModulePositions());
-    
+        SmartDashboard.putString("goal face", goalFace.toString());    
         
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
