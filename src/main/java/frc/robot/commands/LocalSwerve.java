@@ -18,8 +18,8 @@ public class LocalSwerve extends Command{
     private final boolean precise;
     private final double positionIZone = 4;
     private final double positionKS = 0.02;
-    private final double positionTolerance = 1; // 1
-    private final double roughPositionTolerance = 2.5; // inches
+    private final double positionTolerance = 0.5; // 1
+    private final double roughPositionTolerance = 0.5; // inches
     private final double rotationKS = 0.02;
     private final double rotationIZone = 4;
     private final double maxSpeed = Constants.Swerve.maxSpeed / 5.0; // 3.0
@@ -42,8 +42,8 @@ public class LocalSwerve extends Command{
         SmartDashboard.putBoolean("Precise?", precise);
         SmartDashboard.putString("target pose", targetPose.toString());
         addRequirements(m_swerve);
-        xPID = new PIDController(precise ? 0.065 : 0.1, 0, 0); //nom 0.065 rough 0.09 ours was 0.074
-        yPID = new PIDController(precise ? 0.065 : 0.1, 0, 0); //nom 0.065 rough 0.09
+        xPID = new PIDController(precise ? 0.0750 : 0.285, 0, 0); //nom 0.065 rough 0.09 ours was 0.074
+        yPID = new PIDController(precise ? 0.080 : 0.285, 0, 0); //nom 0.065 rough 0.09
         
         xPID.setIZone(positionIZone); // Only use Integral term within this range
         xPID.setIntegratorRange(-positionKS * 2, positionKS * 2);
