@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -36,11 +37,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Vision;
 import frc.robot.commands.LocalSwerve;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.led.LedSubsystem;
+import frc.robot.subsystems.led.LedSubsystem.LedMode;
 
 public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
@@ -300,14 +304,14 @@ public class Swerve extends SubsystemBase {
             Commands.runOnce(() -> {
                 // This code will run when the command starts, so it will use the latest goalFace
                 ReefFace currentFace = this.goalFace; // Capture the current value
-                new LocalSwerve(this, left ? currentFace.approachLeft : currentFace.approachRight, false).withTimeout(3).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
+                new LocalSwerve(this, left ? currentFace.approachLeft : currentFace.approachRight, false).withTimeout(10).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
             }),
-            elevator.moveToNext(),
+           // elevator.moveToNext(),
             // new WaitCommand(0.5),
             Commands.runOnce(() -> {
                 // This code will run after the wait, so it will use the latest goalFace
                 ReefFace currentFace = this.goalFace; // Capture the current value
-                new LocalSwerve(this, left ? currentFace.alignLeft : currentFace.alignRight, true).withTimeout(3).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
+                new LocalSwerve(this, left ? currentFace.alignLeft : currentFace.alignRight, false).withTimeout(10).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
            })
         );
     }

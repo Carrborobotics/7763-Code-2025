@@ -86,8 +86,8 @@ public final class Constants {
 
         // Offset to the reef face, not at the branches, but on the faces directly in front
         public static final Translation2d centerOffset = new Translation2d(reefToFaceDistance + reefOffset, 0.0);
-        private static final Translation2d leftOffset = new Translation2d(reefToFaceDistance + reefOffset, 1.15 * -branchSeparation / 2.0);
-        private static final Translation2d rightOffset = new Translation2d(reefToFaceDistance + reefOffset, 1.13 * branchSeparation / 2.0);
+        private static final Translation2d leftOffset = new Translation2d(reefToFaceDistance + reefOffset, 1.1 * -branchSeparation / 2.0);
+        private static final Translation2d rightOffset = new Translation2d(reefToFaceDistance + reefOffset,  1.1 * branchSeparation / 2.0);
         private static final Translation2d extraOffset = new Translation2d(reefExtraOffset, 0.0);
         private static final Translation2d centerApproachOffset = centerOffset.plus(extraOffset);
         private static final Translation2d leftApproachOffset = leftOffset.plus(extraOffset);
@@ -341,7 +341,7 @@ public final class Constants {
     } */
 
     public static final Transform3d kRobotToCam = new Transform3d(
-            new Translation3d(Units.inchesToMeters(30.0/2.0), Units.inchesToMeters(9.15), Units.inchesToMeters(7.25)), // X and Y were swapped?
+            new Translation3d(Units.inchesToMeters(9.15), Units.inchesToMeters(0.0), Units.inchesToMeters(7.25)), // X and Y were swapped?
                   new Rotation3d(Units.degreesToRadians(0.0), Units.degreesToRadians(-10), Units.degreesToRadians(0)));
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
