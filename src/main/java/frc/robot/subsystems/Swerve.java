@@ -301,17 +301,17 @@ public class Swerve extends SubsystemBase {
     private Command alignReef(boolean left, Elevator elevator) {
 
         return Commands.sequence(
-            Commands.runOnce(() -> {
+            /*Commands.runOnce(() -> {
                 // This code will run when the command starts, so it will use the latest goalFace
                 ReefFace currentFace = this.goalFace; // Capture the current value
-                new LocalSwerve(this, left ? currentFace.approachLeft : currentFace.approachRight, false).withTimeout(10).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
-            }),
+                new LocalSwerve(this, left ? currentFace.approachLeft : currentFace.approachRight, true).withTimeout(10).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
+            }),*/
            // elevator.moveToNext(),
             // new WaitCommand(0.5),
             Commands.runOnce(() -> {
                 // This code will run after the wait, so it will use the latest goalFace
                 ReefFace currentFace = this.goalFace; // Capture the current value
-                new LocalSwerve(this, left ? currentFace.alignLeft : currentFace.alignRight, false).withTimeout(10).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
+                new LocalSwerve(this, left ? currentFace.alignLeft : currentFace.alignRight, true).withTimeout(5).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
            })
         );
     }
@@ -351,15 +351,16 @@ public class Swerve extends SubsystemBase {
                 this);
     }
 
-    /*public double visionDifference(){
+    public double visionDifference(){
         Pose2d vPose = vision.lastPose();
         if (vPose == null){
             return Double.POSITIVE_INFINITY;
         }
+        SmartDashboard.putNumber("Vision Difference",getPose().getTranslation().getDistance(vPose.getTranslation()));
         return getPose().getTranslation().getDistance(vPose.getTranslation());
     }
     
-    */    
+    
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("limelight/use limelight", ll);
