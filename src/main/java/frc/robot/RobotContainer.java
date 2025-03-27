@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Commands;
 //import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -125,32 +124,21 @@ public class RobotContainer {
        
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
-        //SmartDashboard.putString("approach right", Swerve.nearestFace(s_Swerve.getPose().getTranslation()).approachRight.toString());
-        //SmartDashboard.putString("approach left", Swerve.nearestFace(s_Swerve.getPose().getTranslation()).approachLeft.toString());
 
         s_Swerve.setDefaultCommand(
-                new TeleopSwerve(
-                        s_Swerve,
-                        () -> -translationAxis.get(),
-                        () -> -strafeAxis.get(),
-                        () -> -rotationAxis.get(),
-                        () -> false, 
-                        () -> driver.rightStick().getAsBoolean()));
+            new TeleopSwerve(
+                    s_Swerve,
+                    () -> -translationAxis.get(),
+                    () -> -strafeAxis.get(),
+                    () -> -rotationAxis.get(),
+                    () -> false, 
+                    () -> false
+            )
+        );
+
         // Configure the button bindings
         configureButtonBindings();
 
-        /* 
-        NamedCommands.registerCommand("Shoot L3", ShootCoral(ElevatorStop.L3));
-        NamedCommands.registerCommand("Shoot L2", ShootCoral(ElevatorStop.L2));
-        NamedCommands.registerCommand("Shoot L1", ShootCoral(ElevatorStop.L1));
-        NamedCommands.registerCommand("Go to intake", feed());
-        NamedCommands.registerCommand("Intake In", intake.setIntakeSpeed(-0.4));    
-        NamedCommands.registerCommand("Intake Out", intake.setIntakeSpeed(0.4));
-```
-        NamedCommands.registerCommand("Pivot Up", pivot.pivotTo(Pivots.Up));
-        NamedCommands.registerCommand("Pivot Down", pivot.pivotTo(Pivots.Down));
-        NamedCommands.registerCommand("Pivot Intake", pivot.pivotTo(Pivots.Intake));
-        */
     }
 
 
@@ -167,15 +155,15 @@ public class RobotContainer {
                 //.andThen(ledCommand(LedMode.WAVE, Color.kGreen, Color.kBlue)));
 
         driver.x().onTrue(elevators.setNextStopCommand(ElevatorStop.L2)
-                .andThen(ledCommand(LedMode.WAVE2, Color.kBlue, Color.kPink)));
+            .andThen(ledCommand(LedMode.WAVE2, Color.kBlue, Color.kPink)));
 
         driver.y().onTrue(elevators.setNextStopCommand(ElevatorStop.L3)
-                .andThen(ledCommand(LedMode.WATER, Color.kBlack, Color.kBlack)));
+            .andThen(ledCommand(LedMode.WATER, Color.kBlack, Color.kBlack)));
 
                 //.andThen(ledCommand(LedMode.WAVE2, Color.kPurple, Color.kOrange)));
 
         driver.b().onTrue(elevators.setNextStopCommand(ElevatorStop.L4)
-                .andThen(ledCommand(LedMode.FIRE, Color.kBlack, Color.kBlack)));
+            .andThen(ledCommand(LedMode.FIRE, Color.kBlack, Color.kBlack)));
 
         driver.leftBumper().onTrue(elevators.moveToNext());
         driver.rightBumper().onTrue(intake.ejectCoralCmd());
@@ -189,6 +177,7 @@ public class RobotContainer {
 
         driver.start().onTrue(feed());
 
+        // Current sense the intake but make sure it is high for > 0.5s to reduce false triggers
         Trigger coralSensed = new Trigger(() -> intake.hasCoral()).debounce(0.5, DebounceType.kBoth);
   
         coralSensed.onTrue(
@@ -249,30 +238,29 @@ public class RobotContainer {
 
         return 
             Commands.either(
+                // If we have a coral align to left/right to shoot, if not, align to middle for algae
+
                 Commands.sequence(
                     // elevator.moveToNext(),
                     // new WaitCommand(0.5),
                     Commands.runOnce(() -> {
-                        // This code will run after the wait, so it will use the latest goalFace
                         ReefFace currentFace = s_Swerve.goalFace; // Capture the current value
-                        new LocalSwerve(s_Swerve, left ? currentFace.alignLeft : currentFace.alignRight, true).withTimeout(5).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
+                        new LocalSwerve(s_Swerve, left ? currentFace.alignLeft : currentFace.alignRight, true).withTimeout(5).schedule();
                     })
             ),
-
-                    // This code will run after the wait, so it will use the latest goalFace
+                    // Move this to pullAlgae once it works
                     pivot.pivotTo(Pivots.ShootL1)
-                        .andThen(new WaitCommand(1.5))
+                        .andThen(new WaitCommand(0.5))
                         .andThen(Commands.runOnce(() -> {
                             ReefFace currentFace = s_Swerve.goalFace; // Capture the current value
                             elevators.setNextStopCommand(pullAlgae(currentFace)).schedule();
                         }))
                         .andThen(elevators.moveToNext())
-                        .andThen(intake.setIntakeSpeed(0.2))
+                        .andThen(intake.ejectCoralCmd())
                         .andThen(Commands.runOnce(() -> {
                             ReefFace currentFace = s_Swerve.goalFace; // Capture the current value
-                            new LocalSwerve(s_Swerve, currentFace.alignMiddle, true).withTimeout(5).schedule();
-                            }
-                        )
+                            new LocalSwerve(s_Swerve, currentFace.alignMiddle, true).withTimeout(5).schedule();   
+                        })
             ),
             intake::hasCoral
         );
@@ -283,7 +271,6 @@ public class RobotContainer {
         // Check the map to see if the algae is L2 or L3
         ElevatorStop algaeHeight = face.algaeHigh ? ElevatorStop.L3_ALGAE : ElevatorStop.L2_ALGAE;
         return algaeHeight;
-        //return new LocalSwerve(s_Swerve, face.approachMiddle, true);
     }
 
     // scoreBarge - elevates to max, move forward?, reverse intake, back up?, lower elevator, pivot to feed

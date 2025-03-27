@@ -48,11 +48,8 @@ import frc.robot.subsystems.led.LedSubsystem.LedMode;
 
 public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
-    public Boolean ll;
     public boolean doRejectUpdate = false;
 
-    // private final ReentrantLock swerveModLock = new ReentrantLock();
-    //private final Notifier odoNotifier;
     private final SwerveDrivePoseEstimator m_poseEstimator;
     private final Field2d field;
     
@@ -65,7 +62,6 @@ public class Swerve extends SubsystemBase {
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
 
-        ll = false;
         goalFace = ReefFace.KL;
 
         mSwerveMods = new SwerveModule[] {
@@ -78,7 +74,6 @@ public class Swerve extends SubsystemBase {
         // Let the field be visible in elastic
         field = new Field2d();
         SmartDashboard.putData("Field", field);
-
 
         m_poseEstimator = new SwerveDrivePoseEstimator(
                 Constants.Swerve.swerveKinematics,
@@ -122,22 +117,6 @@ public class Swerve extends SubsystemBase {
 
     }
 
-    private double limelightRotation() {
-        double targetAngularVel = LimelightHelpers.getTX("limelight") *Constants.VisionConstants.kCameraAimScaler;
-        //double targetAngleVelocity = LimelightHelpers.getTargetPose_CameraSpace2D("limelight")[5];
-        targetAngularVel *= -1;
-        SmartDashboard.putNumber("limelight/Coral Angular Velocity", targetAngularVel);
-        return targetAngularVel;
-    }
-
-    private double limelightRangeProp(){
-        double targetForwardSpeed = LimelightHelpers.getTY("limelight") * Constants.VisionConstants.kCameraRangeScaler;
-        targetForwardSpeed *= -1;
-        SmartDashboard.putNumber("limelight/Coral Requested Forward Speed", targetForwardSpeed);
-        return targetForwardSpeed;
-    }
-
-
     /** 
      *  @param xSpeed Speed of the robot in the x direction (forward)
      * @param ySpeed Speed of the robot in the y direction (sideways)
@@ -150,35 +129,19 @@ public class Swerve extends SubsystemBase {
     public void drive(double xSpeed, double ySpeed, Translation2d translation, double rotation, boolean fieldRelative, boolean rateLimit, boolean useCoralLimelight) {
         SwerveModuleState[] swerveModuleStates;
 
-        if (LimelightHelpers.getTV("limelight") && useCoralLimelight){
-            ll = true;
-            xSpeed = limelightRangeProp();
-            rotation = limelightRotation();
-            fieldRelative = false;
-            rateLimit = false;
-            swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(
-                new ChassisSpeeds(
-                                    xSpeed,
-                                    translation.getY(),
-                                    rotation));
-
-        }
-        else {
-            ll = false;
-
-            swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(
-                    fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                            translation.getX(),
-                            translation.getY(),
-                            rotation,
-                            getHeading())
-                            : new ChassisSpeeds(
-                                    translation.getX(),
-                                    translation.getY(),
-                                    rotation));
-        }
+        swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(
+                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                        translation.getX(),
+                        translation.getY(),
+                        rotation,
+                        getHeading())
+                        : new ChassisSpeeds(
+                                translation.getX(),
+                                translation.getY(),
+                                rotation));
 
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
+        
         for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], true);
         }
@@ -297,35 +260,7 @@ public class Swerve extends SubsystemBase {
             return ReefFace.IJ;
         }
     }
-/* 
-    private Command alignReef(boolean left, Elevator elevator) {
 
-        return Commands.sequence(
-            Commands.runOnce(() -> {
-                // This code will run when the command starts, so it will use the latest goalFace
-                ReefFace currentFace = this.goalFace; // Capture the current value
-                new LocalSwerve(this, left ? currentFace.approachLeft : currentFace.approachRight, true).withTimeout(10).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
-            }),
-           // elevator.moveToNext(),
-            // new WaitCommand(0.5),
-            Commands.runOnce(() -> {
-                // This code will run after the wait, so it will use the latest goalFace
-                ReefFace currentFace = this.goalFace; // Capture the current value
-                new LocalSwerve(this, left ? currentFace.alignLeft : currentFace.alignRight, true).withTimeout(5).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
-           })
-        );
-    }
-
-    public Command alignLeft(Elevator elevator) {
-        SmartDashboard.putString("left face", nearestFace(getPose().getTranslation()).toString());
-        return alignReef(true, elevator);
-    }
-
-    public Command alignRight(Elevator elevator) {
-        SmartDashboard.putString("right face", nearestFace(getPose().getTranslation()).toString());
-        return alignReef(false, elevator);
-    }
-*/
     public void zeroHeading() {
         if (Robot.isRed()) {
             // setHeading(new Rotation2d(Math.PI));
@@ -363,10 +298,6 @@ public class Swerve extends SubsystemBase {
     
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("limelight/use limelight", ll);
-        SmartDashboard.putNumber("limelight/TX", LimelightHelpers.getTX("limelight"));
-        SmartDashboard.putNumber("limelight/TA", LimelightHelpers.getTA("limelight"));
-        SmartDashboard.putNumber("limelight/TY", LimelightHelpers.getTY("limelight"));
 
         m_poseEstimator.update(getGyroYaw(), getModulePositions());
 

@@ -1,5 +1,4 @@
 package frc.robot.commands;
-import frc.lib.util.LoggedCommandBase;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
