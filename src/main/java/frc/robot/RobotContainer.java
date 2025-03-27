@@ -14,23 +14,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 //import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.*;
+import frc.robot.Constants.Localization.ReefFace;
+import frc.robot.commands.LocalSwerve;
+import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.Elevator.ElevatorStop; // enum of stops
+import frc.robot.subsystems.elevator.ElevatorIOReal;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOReal;
 import frc.robot.subsystems.led.LedSubsystem;
 import frc.robot.subsystems.led.LedSubsystem.LedMode;
-import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.ElevatorIOReal;
-import frc.robot.subsystems.elevator.ElevatorIOSim;
-import frc.robot.subsystems.elevator.Elevator.ElevatorStop; // enum of stops
-import frc.robot.Constants.Localization.ReefFace;
 import frc.robot.subsystems.pivot.Pivot;
 import frc.robot.subsystems.pivot.Pivot.Pivots;
 import frc.robot.subsystems.pivot.PivotIOReal;
@@ -240,17 +242,35 @@ public class RobotContainer {
     }
     
     // pullAlgae - aligns, elevates, turns on intake for time period since algae wont hit sensor, reverses bot some
-    private Command pullAlgae(ReefFace face){
-        // Check the map to see if the algae is L2 or L3
+    private Command pullAlgae(ReefFace face) {
+        // NOTE: Check the map to see if the algae is L2 or L3
         ElevatorStop algaeHeight = face.algaeHigh ? ElevatorStop.L3_ALGAE : ElevatorStop.L2_ALGAE;
+        // want to get underneath the algae if we are not already so we arent smashing
+        // down on it.
+        // if we were previously at (e.g.) L1 then no harm in going to L2.
+        ElevatorStop belowHeight = face.algaeHigh ? ElevatorStop.L3 : ElevatorStop.L2;
 
-        return new LocalSwerve(s_Swerve, face.approachMiddle, true);
+        return Commands.sequence(
+            colorCommand(Color.kCyan),
+            // if we are higher than L2_ALGAE then move elevator to L2.    
+            elevators.moveTo(belowHeight),
+            // then move using auto to middle of the reef
+            new LocalSwerve(s_Swerve, face.approachMiddle, true),
+            // then move pivot to shooting position
+            pivot.pivotTo(Pivots.Shoot),
+            // then run intake motor as if it's shooting
+            intake.setIntakeSpeed(0.40).withTimeout(0.5),
+            // then raise to correct algae height
+            elevators.moveTo(algaeHeight),
+            // then slow down or stop the intake
+            intake.setIntakeSpeed(0.20).withTimeout(0.1),
+            intake.setIntakeSpeed(0.05).withTimeout(0.1)
+            // TODO: then reverse by some amount and let go.
+            // Or will the driver let it go somewhere else?
+        );
+
+        
     }
-
-    // scoreBarge - elevates to max, move forward?, reverse intake, back up?, lower elevator, pivot to feed
-    //private Command scoreBarge() {
-    //    return new InstantCommand(() -> m_led.setColors(Color.kBlue, Color.kGreen));
-    //}
 
     // Setup basic last foot options
     private void setReefCommands(ReefFace face) {
