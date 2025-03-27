@@ -290,7 +290,35 @@ public class RobotContainer {
     //private Command scoreBarge() {
     //    return new InstantCommand(() -> m_led.setColors(Color.kBlue, Color.kGreen));
     //}
+    /* 
+    private Command pullAlgae(ReefFace face) {
+        // NOTE: Check the map to see if the algae is L2 or L3
+        ElevatorStop algaeHeight = face.algaeHigh ? ElevatorStop.L3_ALGAE : ElevatorStop.L2_ALGAE;
+        // want to get underneath the algae if we are not already so we arent smashing
+        // down on it.
+        // if we were previously at (e.g.) L1 then no harm in going to L2.
+        ElevatorStop belowHeight = face.algaeHigh ? ElevatorStop.L3 : ElevatorStop.L2;
 
+        return Commands.sequence(
+            colorCommand(Color.kCyan),
+            // if we are higher than L2_ALGAE then move elevator to L2.    
+            elevators.moveTo(belowHeight),
+            // then move using auto to middle of the reef
+            new LocalSwerve(s_Swerve, face.approachMiddle, true),
+            // then move pivot to shooting position
+            pivot.pivotTo(Pivots.Shoot),
+            // then run intake motor as if it's shooting
+            intake.setIntakeSpeed(0.40).withTimeout(0.5),
+            // then raise to correct algae height
+            elevators.moveTo(algaeHeight),
+            // then slow down or stop the intake
+            intake.setIntakeSpeed(0.20).withTimeout(0.1),
+            intake.setIntakeSpeed(0.05).withTimeout(0.1)
+            // TODO: then reverse by some amount and let go.
+            // Or will the driver let it go somewhere else?
+        );
+
+    }*/
     // Setup basic last foot options
     //private void setReefCommands(ReefFace face) {
     //    pullAlgaeLeftCommands.put(face, pullAlgae(face));
