@@ -1,5 +1,6 @@
 package frc.robot.subsystems.pivot;
 
+import java.lang.annotation.ElementType;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotState;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorStop;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -65,6 +67,7 @@ public class Pivot extends SubsystemBase {
         Shoot,
         Up, 
         Down,
+        ShootL1,
         ShootL4
     };
 
@@ -85,6 +88,7 @@ public class Pivot extends SubsystemBase {
             Map.entry(Pivots.Up, Degrees.of(10)), //11
             Map.entry(Pivots.Shoot, Degrees.of(4.9)), //18
             Map.entry(Pivots.Down, Degrees.of(1.5)),
+            Map.entry(Pivots.ShootL1, Degrees.of(8)),
             Map.entry(Pivots.ShootL4, Degrees.of(4))));
 
     
@@ -101,7 +105,11 @@ public class Pivot extends SubsystemBase {
             () -> {
                 if (stop == ElevatorStop.L4) {
                     this.setpoint = pivotsPos.get(Pivots.ShootL4);
-                } else {
+                }
+                else if (stop == ElevatorStop.L1) {
+                    this.setpoint = pivotsPos.get(Pivots.ShootL1);
+                }
+                else {
                     this.setpoint = pivotsPos.get(Pivots.Shoot);    
                 }
             }

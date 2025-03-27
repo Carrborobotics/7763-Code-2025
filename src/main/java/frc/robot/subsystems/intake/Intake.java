@@ -62,7 +62,7 @@ public class Intake extends SubsystemBase{
      * Command to shoot out the coral
      */
     public Command ejectCoralCmd() {
-        return this.setIntakeSpeed(0.4);
+        return this.setIntakeSpeed(0.2);
     }
 
     /**

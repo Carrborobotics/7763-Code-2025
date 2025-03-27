@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 //import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -116,9 +117,9 @@ public class RobotContainer {
         targetField = new Field2d();
         SmartDashboard.putData("Target Field", targetField);
 
-        for (ReefFace face: ReefFace.values()) {
-            setReefCommands(face);
-        }
+        //for (ReefFace face: ReefFace.values()) {
+        //    setReefCommands(face);
+        //}
        
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -159,7 +160,8 @@ public class RobotContainer {
 
 
         driver.a().onTrue(elevators.setNextStopCommand(ElevatorStop.L1)
-                .andThen(ledCommand(LedMode.SOLID, Color.kGreen, Color.kBlue)));
+            .andThen(pivot.pivotToOnElevator(ElevatorStop.L1))
+            .andThen(ledCommand(LedMode.SOLID, Color.kGreen, Color.kBlue)));
                 //.andThen(ledCommand(LedMode.WAVE, Color.kGreen, Color.kBlue)));
 
         driver.x().onTrue(elevators.setNextStopCommand(ElevatorStop.L2)
@@ -176,9 +178,11 @@ public class RobotContainer {
         driver.leftBumper().onTrue(elevators.moveToNext());
         driver.rightBumper().onTrue(intake.ejectCoralCmd());
 
-        driver.leftTrigger().whileTrue(s_Swerve.alignLeft(elevators));
-        driver.rightTrigger().whileTrue(s_Swerve.alignRight(elevators));
+        driver.leftTrigger().whileTrue(alignReef(true, elevators));
+        driver.rightTrigger().whileTrue(alignReef(false,elevators));
+
         //driver.back().onTrue(pivot.pivotTo(Pivots.ShootL4));
+        
         driver.back().onTrue(pivot.pivotToOnElevator(elevators.getNextStop()));
 
         driver.start().onTrue(feed());
@@ -239,12 +243,45 @@ public class RobotContainer {
         );
     }
     
+    private Command alignReef(boolean left, Elevator elevator) {
+
+        return 
+            Commands.either(
+                Commands.sequence(
+                    // elevator.moveToNext(),
+                    // new WaitCommand(0.5),
+                    Commands.runOnce(() -> {
+                        // This code will run after the wait, so it will use the latest goalFace
+                        ReefFace currentFace = s_Swerve.goalFace; // Capture the current value
+                        new LocalSwerve(s_Swerve, left ? currentFace.alignLeft : currentFace.alignRight, true).withTimeout(5).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
+                    })
+            ),
+
+                    // This code will run after the wait, so it will use the latest goalFace
+                    pivot.pivotTo(Pivots.ShootL1)
+                        .andThen(new WaitCommand(1.5))
+                        .andThen(Commands.runOnce(() -> {
+                            ReefFace currentFace = s_Swerve.goalFace; // Capture the current value
+                            elevators.setNextStopCommand(pullAlgae(currentFace)).schedule();
+                        }))
+                        .andThen(elevators.moveToNext())
+                        .andThen(intake.setIntakeSpeed(0.2))
+                        .andThen(Commands.runOnce(() -> {
+                            ReefFace currentFace = s_Swerve.goalFace; // Capture the current value
+                            new LocalSwerve(s_Swerve, currentFace.alignMiddle, true).withTimeout(5).schedule();
+                            }
+                        )
+            ),
+            intake::hasCoral
+        );
+    }
+
     // pullAlgae - aligns, elevates, turns on intake for time period since algae wont hit sensor, reverses bot some
-    private Command pullAlgae(ReefFace face){
+    private ElevatorStop pullAlgae(ReefFace face){
         // Check the map to see if the algae is L2 or L3
         ElevatorStop algaeHeight = face.algaeHigh ? ElevatorStop.L3_ALGAE : ElevatorStop.L2_ALGAE;
-
-        return new LocalSwerve(s_Swerve, face.approachMiddle, true);
+        return algaeHeight;
+        //return new LocalSwerve(s_Swerve, face.approachMiddle, true);
     }
 
     // scoreBarge - elevates to max, move forward?, reverse intake, back up?, lower elevator, pivot to feed
@@ -253,10 +290,10 @@ public class RobotContainer {
     //}
 
     // Setup basic last foot options
-    private void setReefCommands(ReefFace face) {
-        pullAlgaeLeftCommands.put(face, pullAlgae(face));
-        pullAlgaeRightCommands.put(face, pullAlgae(face));
-    }
+    //private void setReefCommands(ReefFace face) {
+    //    pullAlgaeLeftCommands.put(face, pullAlgae(face));
+    //    pullAlgaeRightCommands.put(face, pullAlgae(face));
+    //}
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

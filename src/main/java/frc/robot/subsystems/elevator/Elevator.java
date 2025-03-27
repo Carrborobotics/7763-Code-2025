@@ -73,9 +73,9 @@ public class Elevator extends SubsystemBase {
             Map.entry(ElevatorStop.INTAKE, Inches.of(0)),
             Map.entry(ElevatorStop.L1, Inches.of(3.5)),
             Map.entry(ElevatorStop.L2, Inches.of(6.5)), // was 8
-            Map.entry(ElevatorStop.L2_ALGAE, Inches.of(11.5)),
+            Map.entry(ElevatorStop.L2_ALGAE, Inches.of(9.5)),
             Map.entry(ElevatorStop.L3, Inches.of(12.0)), // was 13.5
-            Map.entry(ElevatorStop.L3_ALGAE, Inches.of(18.0)),
+            Map.entry(ElevatorStop.L3_ALGAE, Inches.of(13.2)),
             Map.entry(ElevatorStop.L4, Inches.of(21.2))  //21.2
         ));
 

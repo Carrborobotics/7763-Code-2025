@@ -297,15 +297,15 @@ public class Swerve extends SubsystemBase {
             return ReefFace.IJ;
         }
     }
-
+/* 
     private Command alignReef(boolean left, Elevator elevator) {
 
         return Commands.sequence(
-            /*Commands.runOnce(() -> {
+            Commands.runOnce(() -> {
                 // This code will run when the command starts, so it will use the latest goalFace
                 ReefFace currentFace = this.goalFace; // Capture the current value
                 new LocalSwerve(this, left ? currentFace.approachLeft : currentFace.approachRight, true).withTimeout(10).schedule();//withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf).schedule();
-            }),*/
+            }),
            // elevator.moveToNext(),
             // new WaitCommand(0.5),
             Commands.runOnce(() -> {
@@ -325,7 +325,7 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putString("right face", nearestFace(getPose().getTranslation()).toString());
         return alignReef(false, elevator);
     }
-
+*/
     public void zeroHeading() {
         if (Robot.isRed()) {
             // setHeading(new Rotation2d(Math.PI));
