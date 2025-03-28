@@ -183,8 +183,8 @@ public class RobotContainer {
 
         driver.start().onTrue(feed());
 
-        // Current sense the intake but make sure it is high for > 0.5s to reduce false triggers
-        Trigger coralSensed = new Trigger(() -> intake.hasCoral()).debounce(0.5, DebounceType.kBoth);
+        // Current sense the intake but make sure it is high for > 0.75s to reduce false triggers
+        Trigger coralSensed = new Trigger(() -> intake.hasCoral()).debounce(0.75, DebounceType.kBoth);
   
         coralSensed.onTrue(
             colorCommand(Color.kCoral).andThen(pivot.pivotTo(Pivots.Shoot))
@@ -205,7 +205,8 @@ public class RobotContainer {
     private Command feed() {
         return elevators.moveToIntake()
             .andThen(new WaitCommand(1.5))
-            .andThen(intake.setIntakeSpeed(-0.2));
+            .andThen(intake.setIntakeSpeed(-0.2))
+            .andThen(pivot.pivotTo(Pivots.Intake));
     }
 
     // scoreCoral - aligns, elevates, ensure proper position, outtake, waits for empty, stop intake, pivot up, lowers to safe, pivot to feed 
