@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.Logger;
 
 //import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -67,6 +68,7 @@ public class Pivot extends SubsystemBase {
         Shoot,
         Up, 
         Down,
+        Flip,
         ShootL1,
         ShootL4
     };
@@ -87,7 +89,8 @@ public class Pivot extends SubsystemBase {
             Map.entry(Pivots.Intake, Degrees.of(18.8)), //7.5
             Map.entry(Pivots.Up, Degrees.of(10)), //11
             Map.entry(Pivots.Shoot, Degrees.of(4.9)), //18
-            Map.entry(Pivots.Down, Degrees.of(1.5)),
+            Map.entry(Pivots.Down, Degrees.of(0)),
+            Map.entry(Pivots.Flip, Degree.of(6)),
             Map.entry(Pivots.ShootL1, Degrees.of(8)),
             Map.entry(Pivots.ShootL4, Degrees.of(4))));
 
@@ -130,6 +133,7 @@ public class Pivot extends SubsystemBase {
 
         this.io.updateInputs(inputs);
         Logger.processInputs("Pivot", inputs);
+        SmartDashboard.putString("Pivot/Position", this.inputs.position.toString());
 
         if(edu.wpi.first.wpilibj.RobotState.isDisabled()) {
             this.io.stop();

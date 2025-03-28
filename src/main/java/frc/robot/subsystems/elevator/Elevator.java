@@ -43,6 +43,7 @@ public class Elevator extends SubsystemBase {
     private final RobotState goal;
 
     public ElevatorStop nextStop;
+    public ElevatorStop nextStopVal;
 
     public Elevator(ElevatorIO io) {
         this.io = io;
@@ -126,7 +127,7 @@ public class Elevator extends SubsystemBase {
     @Override
     public void periodic() {
          super.periodic();
-
+        nextStopVal = this.nextStop;
         this.io.updateInputs(inputs);
         Logger.processInputs("Elevator", inputs);
 
@@ -144,6 +145,8 @@ public class Elevator extends SubsystemBase {
         goal.updateElevatorPosition(this.setpoint);
         
         SmartDashboard.putString("elevator/next_stop", this.nextStop.toString());
+        SmartDashboard.putString("elevator/next_stop val", nextStopVal.toString());
+
         SmartDashboard.putString("elevator/motor voltage", this.inputs.appliedVoltsLeader.toString());
         SmartDashboard.putString("elevator/motor supply current", this.inputs.supplyCurrentLeader.toString());
         SmartDashboard.putString("elevator/motor torque current", this.inputs.torqueCurrentLeader.toString());

@@ -151,6 +151,7 @@ public class RobotContainer {
 
         driver.povUp().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));        
         driver.povDown().onTrue(s_Swerve.resetModulesToAbsolute());
+        driver.povLeft().onTrue(pivot.pivotTo(Pivots.Down));
 
         driver.a().onTrue(elevators.setNextStopCommand(ElevatorStop.L1)
             .andThen(pivot.pivotToOnElevator(ElevatorStop.L1))
@@ -171,8 +172,12 @@ public class RobotContainer {
             .andThen(pivot.pivotToOnElevator(ElevatorStop.L4))
             .andThen(ledCommand(LedMode.FIRE, Color.kBlack, Color.kBlack)));
 
-        driver.leftBumper().onTrue(elevators.moveToNext());
-        driver.rightBumper().onTrue(intake.ejectCoralCmd());
+        driver.leftBumper().onTrue(elevators.moveToNext().andThen(Commands.runOnce( () -> 
+            { ElevatorStop nextStopElev = elevators.getNextStop();
+                pivot.pivotToOnElevator(nextStopElev);
+            }
+        )));
+        driver.rightBumper().onTrue(intake.ejectCoralCmd(elevators).andThen(new WaitCommand(.3)).andThen(pivot.pivotTo(Pivots.Flip)));
 
         driver.leftTrigger().whileTrue(alignReef(true, elevators));
         driver.rightTrigger().whileTrue(alignReef(false,elevators));

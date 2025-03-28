@@ -40,9 +40,9 @@ public class ElevatorIOReal implements ElevatorIO {
         elevatorLeftConfig.idleMode(IdleMode.kBrake);
 
         elevatorLeftConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        elevatorLeftConfig.closedLoop.pid(0.350, 0.0, 0.0); // 0.2515, 0.0, 0.0
+        elevatorLeftConfig.closedLoop.pid(0.05, 0.0, 0.0); // 0.2515, 0.0, 0.0 0.350
         elevatorLeftConfig.closedLoop.maxMotion.allowedClosedLoopError(0.1); //0.5
-        elevatorLeftConfig.closedLoop.maxMotion.maxVelocity(4000); //8000
+        elevatorLeftConfig.closedLoop.maxMotion.maxVelocity(1500); //8000
         elevatorLeftConfig.closedLoop.maxMotion.maxAcceleration(3500);//2000
 
         elevatorRightConfig.follow(Constants.CANConstants.elevatorLeftId,true);
@@ -65,7 +65,7 @@ public class ElevatorIOReal implements ElevatorIO {
         double level = position.in(Inches);
 
         closedLoopControllerLeft.setReference(level, SparkFlex.ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0,
-                0.54);
+                0.6);
     }
 
     @Override

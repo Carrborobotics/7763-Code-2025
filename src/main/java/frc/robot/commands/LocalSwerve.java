@@ -17,7 +17,7 @@ public class LocalSwerve extends Command{
     
     private final double positionIZone = 4;
     private final double rotationIZone = 4;
-    private final double positionKS = 0.02;
+    private final double positionKS = 0.04;
     private final double rotationKS = 0.02;
 
     public LocalSwerve(Swerve m_swerve, Pose2d targetPose, boolean precise){
@@ -87,7 +87,8 @@ public class LocalSwerve extends Command{
 
     @Override
     public boolean isFinished() {
-        return m_swerve.xPID.atSetpoint() && m_swerve.yPID.atSetpoint() && m_swerve.rPID.atSetpoint() && m_swerve.visionDifference() < Units.inchesToMeters(1.5);
+        return m_swerve.xPID.atSetpoint() && m_swerve.yPID.atSetpoint() && m_swerve.rPID.atSetpoint(); //&& m_swerve.visionDifference() < Units.inchesToMeters(1.5);
     }
+
 }
 

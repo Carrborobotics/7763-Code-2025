@@ -16,6 +16,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 
+import java.lang.module.ModuleDescriptor.Builder;
+
 //import java.lang.reflect.Field;
 //import java.util.function.BooleanSupplier;
 
@@ -54,12 +56,12 @@ public class Swerve extends SubsystemBase {
     private static final LoggedTunableNumber kPx = new LoggedTunableNumber("LocalSwerve/Gains/kPx", 0.02);
     private static final LoggedTunableNumber kIx = new LoggedTunableNumber("LocalSwerve/Gains/kIx", 0.0);
     private static final LoggedTunableNumber kDx = new LoggedTunableNumber("LocalSwerve/Gains/kDx", 0.0);
-    private static final LoggedTunableNumber kPr = new LoggedTunableNumber("LocalSwerve/Gains/kPx", 0.005);
-    private static final LoggedTunableNumber kIr = new LoggedTunableNumber("LocalSwerve/Gains/kIx", 0.0);
-    private static final LoggedTunableNumber kDr = new LoggedTunableNumber("LocalSwerve/Gains/kDx", 0.0);
+    private static final LoggedTunableNumber kPr = new LoggedTunableNumber("LocalSwerve/Gains/kPr", 0.01);
+    private static final LoggedTunableNumber kIr = new LoggedTunableNumber("LocalSwerve/Gains/kIr", 0.0);
+    private static final LoggedTunableNumber kDr = new LoggedTunableNumber("LocalSwerve/Gains/kDr", 0.0);
     public static final LoggedTunableNumber maxSpeed = new LoggedTunableNumber("LocalSwerve/MaxSpd",  Constants.Swerve.maxSpeed / 2.5);
     public static final LoggedTunableNumber maxAngularVelocity = new LoggedTunableNumber("LocalSwerve/MaxAng",  Constants.Swerve.maxAngularVelocity / 4.0);
-    private static final LoggedTunableNumber rotationTolerance = new LoggedTunableNumber("LocalSwerve/Tol/kTr", 1.0);
+    private static final LoggedTunableNumber rotationTolerance = new LoggedTunableNumber("LocalSwerve/Tol/kTr", 2.0);
     private static final LoggedTunableNumber positionTolerance = new LoggedTunableNumber("LocalSwerve/Tol/kTp", 0.5);
     public final PIDController xPID, yPID, rPID; 
 
@@ -145,6 +147,33 @@ public class Swerve extends SubsystemBase {
             }
         });
 
+        SmartDashboard.putData(
+        "Swerve Visualizer",
+        builder -> {
+            builder.setSmartDashboardType("SwerveDrive");
+
+            builder.addDoubleProperty(
+                "Front Left Angle", () -> mSwerveMods[0].getState().angle.getRadians(), null);
+            builder.addDoubleProperty(
+                "Front Left Velocity", () -> mSwerveMods[0].getState().speedMetersPerSecond * 20, null);
+
+            builder.addDoubleProperty(
+                "Front Right Angle", () -> mSwerveMods[1].getState().angle.getRadians(), null);
+            builder.addDoubleProperty(
+                "Front Right Velocity", () -> mSwerveMods[1].getState().speedMetersPerSecond * 20, null);
+
+            builder.addDoubleProperty(
+                "Back Left Angle", () -> mSwerveMods[2].getState().angle.getRadians(), null);
+            builder.addDoubleProperty(
+                "Back Left Velocity", () -> mSwerveMods[2].getState().speedMetersPerSecond * 20, null);
+
+            builder.addDoubleProperty(
+                "Back Right Angle", () -> mSwerveMods[3].getState().angle.getRadians(), null);
+            builder.addDoubleProperty(
+                "Back Right Velocity", () -> mSwerveMods[3].getState().speedMetersPerSecond * 20, null);
+
+            builder.addDoubleProperty("Robot Angle", () -> getHeading().getRadians(), null);
+        });
     }
 
     /** 
@@ -340,7 +369,7 @@ public class Swerve extends SubsystemBase {
                     m_poseEstimator.addVisionMeasurement(
                             est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
                 });
-
+        
         SmartDashboard.putData("Gyro Data", gyro);
         SmartDashboard.putNumber("Gyro Yaw", getGyroYaw().getDegrees());
         SmartDashboard.putBoolean("is red?", Robot.isRed());
@@ -352,11 +381,16 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putString("actual pose", pose.toString());
         SmartDashboard.putString("nearest face" , nearestFace(pose.getTranslation()).toString());
         SmartDashboard.putString("goal face", goalFace.toString());    
-        
+        SmartDashboard.putBoolean("Align/x at set", xPID.atSetpoint());
+        SmartDashboard.putBoolean("Align/y at set", yPID.atSetpoint());
+        SmartDashboard.putBoolean("Align/r at set", rPID.atSetpoint());
+        SmartDashboard.putBoolean("Align/viz at set", visionDifference() < Units.inchesToMeters(1.5));
+
+
         for (SwerveModule mod : mSwerveMods) {
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+            SmartDashboard.putNumber("Swerve/Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
+            SmartDashboard.putNumber("Swerve/Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
+            SmartDashboard.putNumber("Swerve/Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
         } 
             
     }

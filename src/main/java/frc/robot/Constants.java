@@ -86,8 +86,8 @@ public final class Constants {
 
         // Offset to the reef face, not at the branches, but on the faces directly in front
         public static final Translation2d centerOffset = new Translation2d(reefToFaceDistance + reefOffset, 0.0);
-        private static final Translation2d leftOffset = new Translation2d(reefToFaceDistance + reefOffset, 1.1 * -branchSeparation / 2.0);
-        private static final Translation2d rightOffset = new Translation2d(reefToFaceDistance + reefOffset,  1.1 * branchSeparation / 2.0);
+        private static final Translation2d leftOffset = new Translation2d(reefToFaceDistance + reefOffset, -branchSeparation / 2.0);
+        private static final Translation2d rightOffset = new Translation2d(reefToFaceDistance + reefOffset, branchSeparation / 2.0);
         private static final Translation2d extraOffset = new Translation2d(reefExtraOffset, 0.0);
         private static final Translation2d centerApproachOffset = centerOffset.plus(extraOffset);
         private static final Translation2d leftApproachOffset = leftOffset.plus(extraOffset);
