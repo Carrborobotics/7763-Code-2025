@@ -33,17 +33,22 @@ public class LedSubsystem extends SubsystemBase {
         pacmanEffect = new PacmanEffect(170);
     }
 
-    // setter for current primary Color
+    // setter for primary Color
     public void setColor(Color color) {
         primaryColor = color;
     }
+    // setter for secondary Color
     public void setSecondaryColor(Color color) {
         secondaryColor = color;
     }
-
     // setter for active mode
     public void setMode(LedMode amode) {
         mode = amode;
+    }
+    public void setModeAndColors(LedMode amode, Color color1, Color color2) {
+        setMode(amode);
+        setColor(color1);
+        setSecondaryColor(color2);
     }
     
     @Override
@@ -59,9 +64,9 @@ public class LedSubsystem extends SubsystemBase {
         if (mode == LedMode.SOLID) {
             solid(primaryColor);
         } else if (mode == LedMode.STROBE) {
-            strobe(primaryColor, 0.1);
+            strobe(primaryColor, secondaryColor, 0.1);
         } else if (mode == LedMode.FLASH) {
-            strobe(primaryColor, 1.0);
+            strobe(primaryColor, secondaryColor, 1.0);
         } else if (mode == LedMode.WAVE) {
             wave(primaryColor, secondaryColor, 25.0, 1.0);  
         } else if (mode == LedMode.WAVE2) {

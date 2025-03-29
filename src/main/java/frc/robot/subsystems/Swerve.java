@@ -53,16 +53,16 @@ import edu.wpi.first.math.controller.PIDController;
 public class Swerve extends SubsystemBase {
 
 
-    private static final LoggedTunableNumber kPx = new LoggedTunableNumber("LocalSwerve/Gains/kPx", 0.02);
+    private static final LoggedTunableNumber kPx = new LoggedTunableNumber("LocalSwerve/Gains/kPx", 0.025);
     private static final LoggedTunableNumber kIx = new LoggedTunableNumber("LocalSwerve/Gains/kIx", 0.0);
     private static final LoggedTunableNumber kDx = new LoggedTunableNumber("LocalSwerve/Gains/kDx", 0.0);
-    private static final LoggedTunableNumber kPr = new LoggedTunableNumber("LocalSwerve/Gains/kPr", 0.01);
+    private static final LoggedTunableNumber kPr = new LoggedTunableNumber("LocalSwerve/Gains/kPr", 0.015);
     private static final LoggedTunableNumber kIr = new LoggedTunableNumber("LocalSwerve/Gains/kIr", 0.0);
     private static final LoggedTunableNumber kDr = new LoggedTunableNumber("LocalSwerve/Gains/kDr", 0.0);
     public static final LoggedTunableNumber maxSpeed = new LoggedTunableNumber("LocalSwerve/MaxSpd",  Constants.Swerve.maxSpeed / 2.5);
     public static final LoggedTunableNumber maxAngularVelocity = new LoggedTunableNumber("LocalSwerve/MaxAng",  Constants.Swerve.maxAngularVelocity / 4.0);
-    private static final LoggedTunableNumber rotationTolerance = new LoggedTunableNumber("LocalSwerve/Tol/kTr", 2.0);
-    private static final LoggedTunableNumber positionTolerance = new LoggedTunableNumber("LocalSwerve/Tol/kTp", 0.5);
+    private static final LoggedTunableNumber rotationTolerance = new LoggedTunableNumber("LocalSwerve/Tol/kTr", 1.5);
+    private static final LoggedTunableNumber positionTolerance = new LoggedTunableNumber("LocalSwerve/Tol/kTp", 0.75);
     public final PIDController xPID, yPID, rPID; 
 
     public final double positionIZone = 4;
@@ -364,10 +364,10 @@ public class Swerve extends SubsystemBase {
         visionEst.ifPresent(
                 est -> {
                     // Change our trust in the measurement based on the tags we can see
-                    var estStdDevs = vision.getEstimationStdDevs();
+                    //var estStdDevs = vision.getEstimationStdDevs();
 
                     m_poseEstimator.addVisionMeasurement(
-                            est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+                            est.estimatedPose.toPose2d(), est.timestampSeconds);//, estStdDevs);
                 });
         
         SmartDashboard.putData("Gyro Data", gyro);

@@ -5,13 +5,17 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.led.LedSubsystem;
+import frc.robot.subsystems.led.LedSubsystem.LedMode;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class LocalSwerve extends Command{
 
     private final Swerve m_swerve;
+    private final LedSubsystem m_led;
     private final Pose2d targetPose;
     private final boolean precise;
     
@@ -20,9 +24,9 @@ public class LocalSwerve extends Command{
     private final double positionKS = 0.04;
     private final double rotationKS = 0.02;
 
-    public LocalSwerve(Swerve m_swerve, Pose2d targetPose, boolean precise){
+    public LocalSwerve(Swerve m_swerve, Pose2d targetPose, boolean precise, LedSubsystem led){
         super();
-
+        m_led = led;
         targetPose = Swerve.flipIfRed(targetPose);
 
         this.m_swerve = m_swerve;
@@ -73,14 +77,17 @@ public class LocalSwerve extends Command{
         double correction = m_swerve.rPID.calculate(rotation.getDegrees());
         double feedForward = rotationKS * Math.signum(correction);
         double rotationVal = MathUtil.clamp(correction + feedForward, -1.0, 1.0);
+        
+        // turn on color before autoaligning
+        m_led.setModeAndColors(LedMode.STROBE, Color.kRed, Color.kPurple);
 
         /* Drive */
         
         m_swerve.drive(
             0.0,
             0.0,
-            new Translation2d(xVal, yVal).times(m_swerve.maxSpeed.get()), 
-            rotationVal * m_swerve.maxAngularVelocity.get(),
+            new Translation2d(xVal, yVal).times(Swerve.maxSpeed.get()), 
+            rotationVal * Swerve.maxAngularVelocity.get(),
             true, false, false
          );
     }
@@ -88,6 +95,15 @@ public class LocalSwerve extends Command{
     @Override
     public boolean isFinished() {
         return m_swerve.xPID.atSetpoint() && m_swerve.yPID.atSetpoint() && m_swerve.rPID.atSetpoint(); //&& m_swerve.visionDifference() < Units.inchesToMeters(1.5);
+    }
+    
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+            m_led.setModeAndColors(LedMode.STROBE, Color.kBlack, Color.kWhite);
+        } else {
+            m_led.setModeAndColors(LedMode.STROBE, Color.kGreen, Color.kGreenYellow);
+        }
     }
 
 }

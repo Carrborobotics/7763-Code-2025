@@ -90,7 +90,7 @@ import java.util.List;
              SmartDashboard.putBoolean("vision/has tag?", !visionEst.isEmpty());
 
              lastPose = visionEst.get().estimatedPose.toPose2d();
-             updateEstimationStdDevs(visionEst, change.getTargets());
+             //updateEstimationStdDevs(visionEst, change.getTargets());
          }
          return visionEst;
      }

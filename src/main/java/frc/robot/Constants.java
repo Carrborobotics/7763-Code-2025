@@ -72,7 +72,7 @@ public final class Constants {
 
         public static final double robotFrameLength = Units.inchesToMeters(30);
         public static final double bumperWidth = Units.inchesToMeters(3);
-        public static final double reefStandoff = Units.inchesToMeters(0);
+        public static final double reefStandoff = Units.inchesToMeters(1.5);
         public static final double reefOffset = robotFrameLength / 2.0 + bumperWidth + reefStandoff;
         public static final double reefExtraOffset = Units.inchesToMeters(18.0); // reef wood to outside of tape line
         public static final double bonusStandoff = Units.inchesToMeters(4.0);
@@ -85,7 +85,8 @@ public final class Constants {
         public static final double branchSeparation = Units.inchesToMeters(12.0 + 15.0 / 16.0);
 
         // Offset to the reef face, not at the branches, but on the faces directly in front
-        public static final Translation2d centerOffset = new Translation2d(reefToFaceDistance + reefOffset, 0.0);
+        public static final Translation2d centerOffset = new Translation2d(reefToFaceDistance +reefOffset - reefStandoff, 0.0);
+        //public static final Translation2d centerOffset = new Translation2d(reefToFaceDistance + reefOffset, 0.0);
         private static final Translation2d leftOffset = new Translation2d(reefToFaceDistance + reefOffset, -branchSeparation / 2.0);
         private static final Translation2d rightOffset = new Translation2d(reefToFaceDistance + reefOffset, branchSeparation / 2.0);
         private static final Translation2d extraOffset = new Translation2d(reefExtraOffset, 0.0);
