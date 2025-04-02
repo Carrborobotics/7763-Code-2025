@@ -68,7 +68,7 @@ public class Intake extends SubsystemBase{
     public Command ejectCoralCmd(Elevator elevator) {
         double speed = defaultEjectSpeed;
         if (elevator.getNextStop() == ElevatorStop.L1) {
-            speed = 0.1;
+            speed = 0.25;
         } else if (elevator.getNextStop() == ElevatorStop.L4) {
             speed = 0.1;
         }  

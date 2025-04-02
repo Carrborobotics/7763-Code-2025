@@ -94,14 +94,16 @@ public class RobotContainer {
 
 
         NamedCommands.registerCommand("Intake On", intake.setIntakeSpeed(-0.3));
-        NamedCommands.registerCommand("Pivot to Shoot", intake.setIntakeSpeed(-0.3).andThen(new WaitCommand(1.0)).andThen(pivot.pivotTo(Pivots.Shoot).andThen(colorCommand(Color.kRed))));
+        NamedCommands.registerCommand("Pivot to Shoot", intake.setIntakeSpeed(-0.3).andThen(pivot.pivotTo(Pivots.Shoot).andThen(colorCommand(Color.kRed))));
         NamedCommands.registerCommand("Elevator L4",
             Commands.sequence( 
                 elevators.setNextStopCommand(ElevatorStop.L4),
-                elevators.moveToNext()
+                elevators.moveToNext(),
+                pivot.pivotTo(Pivots.ShootL4)
             ));
+        NamedCommands.registerCommand("Pivot to Out", intake.setIntakeSpeed(-0.3).andThen(new WaitCommand(.3)).andThen(pivot.pivotTo(Pivots.ShootL1)));
         NamedCommands.registerCommand("Shoot", autoShootCoral().andThen(colorCommand(Color.kGreen)));
-        NamedCommands.registerCommand("Feed", feed().until(intake::hasCoral).andThen(pivot.pivotTo(Pivots.Shoot)).andThen(colorCommand(Color.kOrange)));
+        NamedCommands.registerCommand("Feed", feed());//.until(intake::hasCoral).andThen(pivot.pivotTo(Pivots.Shoot)).andThen(colorCommand(Color.kOrange)));
         NamedCommands.registerCommand("FindCoral",
             (new InstantCommand(() -> LimelightHelpers.setLEDMode_ForceOn("limelight")))
             .andThen (new RunCommand(
@@ -184,7 +186,7 @@ public class RobotContainer {
                 Commands.sequence(
                     new WaitCommand(.3),
                     pivot.pivotTo(Pivots.Flip)
-                ).unless( () -> elevators.getNextStop() == ElevatorStop.L4 )
+                ).unless( () -> elevators.getNextStop() != ElevatorStop.L4 )
             )
         );
         driver.leftTrigger().whileTrue(alignReef(true, elevators));
@@ -217,7 +219,7 @@ public class RobotContainer {
     // feed - get to feeder station with pivot and elevator in place, spin up intake when close, and wait for coral sensor, stop intake and pivot to shoot
     private Command feed() {
         return Commands.sequence(
-            ledCommand(LedMode.WAVE, Color.kPink, original_color),
+            //ledCommand(LedMode.WAVE, Color.kPink, original_color),
             elevators.moveToIntake(),
             new WaitCommand(1.5),
             intake.setIntakeSpeed(-0.2),
@@ -238,9 +240,14 @@ public class RobotContainer {
     }
 
     public Command autoShootCoral(){
-        return intake.ejectCoralCmd(elevators)
-                 .andThen(new WaitCommand(1.0))
-                 .andThen(pivot.pivotTo(Pivots.Up)); 
+        return Commands.sequence(    
+                intake.ejectCoralCmd(elevators),
+                Commands.sequence(
+                    new WaitCommand(.3),
+                    pivot.pivotTo(Pivots.Flip)
+                ).unless( () -> elevators.getNextStop() != ElevatorStop.L4 ),
+                new WaitCommand(.5),
+                (pivot.pivotTo(Pivots.Up)));
      }
 
     private Command colorCommand(Color acolor) {

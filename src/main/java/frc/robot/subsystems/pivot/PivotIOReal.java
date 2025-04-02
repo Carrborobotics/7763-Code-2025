@@ -47,7 +47,7 @@ public class PivotIOReal implements PivotIO {
                 .velocityConversionFactor(1);
         config.closedLoop
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .pid(0.15, 0.0, 0.0);
+                .pid(0.1, 0.0, 0.0);
         pivotSpark.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         pivotSpark.getEncoder().setPosition(0);
         return pivotSpark;

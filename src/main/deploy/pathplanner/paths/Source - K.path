@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.365,
-        "y": 0.6417499999999996
+        "x": 1.2,
+        "y": 0.3
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.11575,
-        "y": 1.0804999999999996
+        "x": 1.95075,
+        "y": 0.7387500000000002
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.92925,
-        "y": 2.70875
+        "x": 3.982700892857143,
+        "y": 2.7779575892857142
       },
       "prevControl": {
-        "x": 3.51975,
-        "y": 2.2407499999999994
+        "x": 3.4942433035714284,
+        "y": 1.920044642857143
       },
       "nextControl": null,
       "isLocked": false,
@@ -53,22 +53,11 @@
           "name": "Elevator L4"
         }
       }
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Shoot"
-        }
-      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
