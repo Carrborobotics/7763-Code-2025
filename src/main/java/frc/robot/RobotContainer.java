@@ -10,6 +10,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -158,8 +160,8 @@ public class RobotContainer {
 
         driver.a().onTrue(elevators.setNextStopCommand(ElevatorStop.L1)
             .andThen(pivot.pivotToOnElevator(ElevatorStop.L1))
-            .andThen(ledCommand(LedMode.SOLID, Color.kGreen, Color.kBlue)));
-                //.andThen(ledCommand(LedMode.WAVE, Color.kGreen, Color.kBlue)));
+            //.andThen(ledCommand(LedMode.SOLID, Color.kGreen, Color.kBlue)));
+            .andThen(ledCommand(LedMode.WAVE, Color.kGreen, Color.kBlue)));
 
         driver.x().onTrue(elevators.setNextStopCommand(ElevatorStop.L2)
             .andThen(pivot.pivotToOnElevator(ElevatorStop.L2))
@@ -202,8 +204,10 @@ public class RobotContainer {
         Trigger coralSensed = new Trigger(() -> intake.hasCoral()).debounce(0.75, DebounceType.kBoth);
   
         coralSensed.onTrue(
-            colorCommand(Color.kCoral).andThen(pivot.pivotTo(Pivots.Shoot))
-        );
+            pivot.pivotTo(Pivots.Shoot).andThen(ledCommand(LedMode.FLASH, Color.kCoral, Color.kBlack))
+            .andThen(new WaitCommand(1)).andThen(colorCommand(Color.kBlue)));
+        
+        //colorCommand(Color.kCoral).andThen(pivot.pivotTo(Pivots.Shoot))
 
     }
 
@@ -221,7 +225,8 @@ public class RobotContainer {
         return Commands.sequence(
             //ledCommand(LedMode.WAVE, Color.kPink, original_color),
             elevators.moveToIntake(),
-            new WaitCommand(1.5),
+            elevators.waitForLessThanPosition(Units.Inches.of(2)),
+            //new WaitCommand(1.5),
             intake.setIntakeSpeed(-0.2),
             pivot.pivotTo(Pivots.Intake)
         );
@@ -269,7 +274,7 @@ public class RobotContainer {
             Commands.runOnce(() -> {
                 ReefFace currentFace = s_Swerve.goalFace; // Capture the current value
                 new LocalSwerve(s_Swerve, left ? currentFace.alignLeft : currentFace.alignRight, true, m_led)
-                    .withTimeout(5).schedule();
+                    .withTimeout(3.5).schedule();
                     })//,
             //ledCommand(LedMode.STROBE, Color.kBlue, Color.kPurple)
         );
@@ -287,7 +292,7 @@ public class RobotContainer {
     private Command pullAlgae() {
         return Commands.sequence(
             colorCommand(Color.kCyan), // algae ball is cyan, yo.
-            pivot.pivotTo(Pivots.ShootL1),
+            pivot.pivotTo(Pivots.Algae),
             Commands.runOnce(() -> {
                 ReefFace currentFace = s_Swerve.goalFace; // Capture the current value
                 elevators.setNextStopCommand(getAlgaeStop(currentFace)).schedule();
@@ -296,7 +301,7 @@ public class RobotContainer {
             intake.ejectCoralCmd(elevators),
             Commands.runOnce(() -> {
                 ReefFace currentFace = s_Swerve.goalFace; // Capture the current value
-                new LocalSwerve(s_Swerve, currentFace.alignMiddle, true, m_led).withTimeout(5).schedule();
+                new LocalSwerve(s_Swerve, currentFace.alignMiddle, true, m_led).withTimeout(3.5).schedule();
             })
         );
 

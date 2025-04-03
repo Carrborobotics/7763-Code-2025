@@ -100,9 +100,9 @@ public class LocalSwerve extends Command{
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            m_led.setModeAndColors(LedMode.STROBE, Color.kBlack, Color.kWhite);
+            m_led.setModeAndColors(LedMode.WAVE, Color.kBlack, Color.kWhite);
         } else {
-            m_led.setModeAndColors(LedMode.STROBE, Color.kGreen, Color.kGreenYellow);
+            m_led.setModeAndColors(LedMode.WAVE, Color.kGreen, Color.kBlue);
         }
     }
 

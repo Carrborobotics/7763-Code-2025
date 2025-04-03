@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1117984693877552,
-        "y": 7.296970663265306
+        "x": 1.8057397959183674,
+        "y": 6.894036989795918
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6350526147959188,
-        "y": 6.7438695790816325
+        "x": 2.0897118568381554,
+        "y": 6.592566784391197
       },
       "isLocked": false,
       "linkedName": "Upper Source"
     },
     {
       "anchor": {
-        "x": 3.9761718749999995,
-        "y": 5.239397321428571
+        "x": 3.97,
+        "y": 5.26
       },
       "prevControl": {
-        "x": 3.1563137755102044,
-        "y": 5.998628826530612
+        "x": 3.7978665528014055,
+        "y": 5.441301065511289
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,15 +47,31 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Elevator L4",
-      "waypointRelativePos": 0.55,
+      "name": "Pivot to Shoot",
+      "waypointRelativePos": 0.2,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Pivot to Shoot"
+        }
+      }
+    },
+    {
+      "name": "Elevator L4",
+      "waypointRelativePos": 0.35,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Elevator L4"
+        }
+      }
     }
   ],
   "globalConstraints": {
     "maxVelocity": 2.0,
-    "maxAcceleration": 1.5,
+    "maxAcceleration": 1.25,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

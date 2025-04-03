@@ -6,6 +6,7 @@ import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -43,7 +44,9 @@ public class ElevatorIOReal implements ElevatorIO {
         elevatorLeftConfig.closedLoop.pid(0.05, 0.0, 0.0); // 0.6, 0.0, 0.0 0.350
         elevatorLeftConfig.closedLoop.maxMotion.allowedClosedLoopError(0.5); //0.5
         elevatorLeftConfig.closedLoop.maxMotion.maxVelocity(4000); //8000
-        elevatorLeftConfig.closedLoop.maxMotion.maxAcceleration(8000);//2000
+        elevatorLeftConfig.closedLoop.maxMotion.maxAcceleration(3500);//2000
+        elevatorLeftConfig.closedLoop.maxMotion.positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal);//2000
+
 
         elevatorRightConfig.follow(Constants.CANConstants.elevatorLeftId,true);
 
@@ -65,7 +68,7 @@ public class ElevatorIOReal implements ElevatorIO {
         double level = position.in(Inches);
 
         closedLoopControllerLeft.setReference(level, SparkFlex.ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0,
-                0.85); //0.6
+                0.6); //0.6
     }
 
     @Override
@@ -107,7 +110,11 @@ public class ElevatorIOReal implements ElevatorIO {
     public void setBrakeMode(boolean enabled) {}
     public void setPID(double p, double i, double d) {}
     */
-    
+    @Override
+    public Distance getPosition() {
+        return Inches.of(elevatorLeft.getEncoder().getPosition());
+    }
+
     public void stop() {
         runVolts(Volts.of(0));
     }

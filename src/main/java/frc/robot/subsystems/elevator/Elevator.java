@@ -37,6 +37,7 @@ public class Elevator extends SubsystemBase {
     private final ElevatorVisualizer goalVisualizer;
 
     private Distance setpoint = Inches.of(0.0);
+    private Distance position = Inches.of(0.0);
 
     private final RobotState actual;
     private final RobotState target;
@@ -73,10 +74,10 @@ public class Elevator extends SubsystemBase {
     private final EnumMap<ElevatorStop, Distance> elevatorHeights = new EnumMap<>(Map.ofEntries(
             Map.entry(ElevatorStop.INTAKE, Inches.of(0)),
             Map.entry(ElevatorStop.L1, Inches.of(0)),
-            Map.entry(ElevatorStop.L2, Inches.of(5.4)), // was 8
-            Map.entry(ElevatorStop.L2_ALGAE, Inches.of(9.5)), // DO NOT USE
-            Map.entry(ElevatorStop.L3, Inches.of(11.4)), // was 13.5
-            Map.entry(ElevatorStop.L3_ALGAE, Inches.of(7)),
+            Map.entry(ElevatorStop.L2, Inches.of(5.1)), // was 8
+            Map.entry(ElevatorStop.L2_ALGAE, Inches.of(7.5)), // DO NOT USE
+            Map.entry(ElevatorStop.L3, Inches.of(11.0)), // was 13.5
+            Map.entry(ElevatorStop.L3_ALGAE, Inches.of(6)),
             Map.entry(ElevatorStop.L4, Inches.of(21.2))  //21.2
         ));
 
@@ -121,13 +122,14 @@ public class Elevator extends SubsystemBase {
     }
 
     public Command waitForLessThanPosition(Distance position) {
-        return Commands.waitUntil(() -> this.inputs.position.lt(position));
+        return Commands.waitUntil(() -> this.io.getPosition().lt(position));
     }
 
     @Override
     public void periodic() {
          super.periodic();
         nextStopVal = this.nextStop;
+        position = this.actual.getElevatorPosition();
         this.io.updateInputs(inputs);
         Logger.processInputs("Elevator", inputs);
 
@@ -143,7 +145,7 @@ public class Elevator extends SubsystemBase {
         actual.updateElevatorPosition(this.inputs.position);
         target.updateElevatorPosition(this.inputs.setpointPosition);
         goal.updateElevatorPosition(this.setpoint);
-        
+        SmartDashboard.putString("elevator/REAL Position", this.io.getPosition().toString());
         SmartDashboard.putString("elevator/next_stop", this.nextStop.toString());
         SmartDashboard.putString("elevator/next_stop val", nextStopVal.toString());
 

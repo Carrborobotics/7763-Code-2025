@@ -70,6 +70,7 @@ public class Pivot extends SubsystemBase {
         Down,
         Flip,
         ShootL1,
+        Algae,
         ShootL4
     };
 
@@ -91,7 +92,8 @@ public class Pivot extends SubsystemBase {
             Map.entry(Pivots.Shoot, Degrees.of(4.9)), //18
             Map.entry(Pivots.Down, Degrees.of(0)),
             Map.entry(Pivots.Flip, Degree.of(6)),
-            Map.entry(Pivots.ShootL1, Degrees.of(8)),
+            Map.entry(Pivots.ShootL1, Degrees.of(6.5)),
+            Map.entry(Pivots.Algae, Degrees.of(7)),
             Map.entry(Pivots.ShootL4, Degrees.of(4))));
 
     
