@@ -203,8 +203,11 @@ public class RobotContainer {
         // Current sense the intake but make sure it is high for > 0.75s to reduce false triggers
         Trigger coralSensed = new Trigger(() -> intake.hasCoral()).debounce(0.75, DebounceType.kBoth);
   
+
+        //Wait command to stop coral from hitting cross-bar
         coralSensed.onTrue(
-            pivot.pivotTo(Pivots.Shoot).andThen(ledCommand(LedMode.FLASH, Color.kCoral, Color.kBlack))
+            new WaitCommand(.25)
+            .andThen(pivot.pivotTo(Pivots.Shoot).andThen(ledCommand(LedMode.FLASH, Color.kCoral, Color.kBlack)))
             .andThen(new WaitCommand(1)).andThen(colorCommand(Color.kBlue)));
         
         //colorCommand(Color.kCoral).andThen(pivot.pivotTo(Pivots.Shoot))
