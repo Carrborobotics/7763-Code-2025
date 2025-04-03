@@ -94,6 +94,7 @@ public class ElevatorReal implements ElevatorIO {
         runVolts(Volts.of(0));
     }
     
+    @Override
     public void periodic() {
         // recalculate evert 20ms
         m_setpoint = m_profile.calculate(0.02, m_setpoint, m_goal);

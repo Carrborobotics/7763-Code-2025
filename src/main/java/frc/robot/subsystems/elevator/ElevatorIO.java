@@ -53,4 +53,6 @@ public interface ElevatorIO {
     default void setFF(double kS, double kG, double kV, double kA) {}
 
     default void stop() {}
+
+    default void periodic() {}
 }
