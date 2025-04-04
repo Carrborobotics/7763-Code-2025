@@ -11,15 +11,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Elevator L4"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Left Start"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.1
+            "name": "Pivot to Shoot"
           }
         },
         {
@@ -29,27 +35,15 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.15
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "F - Source"
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "Intake On"
+            "name": "Wait for Coral"
           }
         },
         {
@@ -59,9 +53,39 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.1
+            "name": "Pivot to Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "D - Source"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait for Coral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Source - C"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pivot to Shoot"
           }
         },
         {

@@ -14,6 +14,8 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import static edu.wpi.first.units.Units.*;
 
 public class ElevatorReal implements ElevatorIO {
@@ -25,7 +27,7 @@ public class ElevatorReal implements ElevatorIO {
     private SparkClosedLoopController closedLoopControllerLeft;
 
     // units are m/s and m/s^2
-    private final TrapezoidProfile m_profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(12,5));
+    private final TrapezoidProfile m_profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(100,65));
 
     private TrapezoidProfile.State m_goal = new TrapezoidProfile.State();
     private TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
@@ -47,7 +49,7 @@ public class ElevatorReal implements ElevatorIO {
         elevatorLeftConfig
             .closedLoop
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .pid(0.035,0,0)
+                .pid(0.175,0,0) // 0.035, 0, 0
                 .outputRange(-1, 1);
 
         elevatorRightConfig.follow(Constants.CANConstants.elevatorLeftId,true);
@@ -61,7 +63,7 @@ public class ElevatorReal implements ElevatorIO {
 
     @Override
     public void runSetpoint(Distance position) {
-        double level = position.in(Meters);
+        double level = position.in(Inches);
 
         m_goal = new TrapezoidProfile.State(level, 0); // should have 0 velicty at the goal point
     }
@@ -93,17 +95,22 @@ public class ElevatorReal implements ElevatorIO {
     public void stop() {
         runVolts(Volts.of(0));
     }
+
+    public Distance getPosition() {
+        return Inches.of(elevatorLeft.getEncoder().getPosition());
+    }
     
     @Override
     public void periodic() {
         // recalculate evert 20ms
         m_setpoint = m_profile.calculate(0.02, m_setpoint, m_goal);
-
+        SmartDashboard.putNumber("ElevatorREAL/Left position", elevatorLeft.getEncoder().getPosition());
+        SmartDashboard.putNumber("ElevatorREAL/Left velocity", elevatorLeft.getEncoder().getVelocity());
         closedLoopControllerLeft.setReference(
             m_setpoint.position,
             SparkFlex.ControlType.kPosition,
             ClosedLoopSlot.kSlot0,
-            m_feedforward.calculate(m_setpoint.velocity) / 12.0); // velocity is from exanple code
+            m_feedforward.calculate(m_setpoint.velocity) / 12.0); // velocity is from example code
     }
 
 

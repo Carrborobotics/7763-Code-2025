@@ -74,11 +74,11 @@ public class Elevator extends SubsystemBase {
     private final EnumMap<ElevatorStop, Distance> elevatorHeights = new EnumMap<>(Map.ofEntries(
             Map.entry(ElevatorStop.INTAKE, Inches.of(0)),
             Map.entry(ElevatorStop.L1, Inches.of(0)),
-            Map.entry(ElevatorStop.L2, Inches.of(5.1)), // was 8
+            Map.entry(ElevatorStop.L2, Inches.of(5.5)), // was 8
             Map.entry(ElevatorStop.L2_ALGAE, Inches.of(7.5)), // DO NOT USE
-            Map.entry(ElevatorStop.L3, Inches.of(11.0)), // was 13.5
+            Map.entry(ElevatorStop.L3, Inches.of(11.5)), // was 13.5
             Map.entry(ElevatorStop.L3_ALGAE, Inches.of(6)),
-            Map.entry(ElevatorStop.L4, Inches.of(21.2))  //21.2
+            Map.entry(ElevatorStop.L4, Inches.of(21.5))  //21.2
         ));
 
     public Command moveTo(ElevatorStop stop) {
@@ -127,7 +127,8 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-         super.periodic();
+        super.periodic();
+        io.periodic();
         nextStopVal = this.nextStop;
         position = this.actual.getElevatorPosition();
         this.io.updateInputs(inputs);

@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Localization.ReefFace;
@@ -31,6 +32,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Elevator.ElevatorStop; // enum of stops
 import frc.robot.subsystems.elevator.ElevatorIOReal;
+import frc.robot.subsystems.elevator.ElevatorReal;
 import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOReal;
@@ -85,7 +87,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         if (Robot.isReal()) {
-            this.elevators = new Elevator(new ElevatorIOReal());
+            this.elevators = new Elevator(new ElevatorReal());
             this.pivot = new Pivot(new PivotIOReal());
             this.intake = new Intake(new IntakeIOReal());
         } else {
@@ -94,9 +96,10 @@ public class RobotContainer {
             this.intake = new Intake(new IntakeIOReal()); 
         }
 
+        // Current sense the intake but make sure it is high for > 0.75s to reduce false triggers
 
         NamedCommands.registerCommand("Intake On", intake.setIntakeSpeed(-0.3));
-        NamedCommands.registerCommand("Pivot to Shoot", intake.setIntakeSpeed(-0.3).andThen(pivot.pivotTo(Pivots.Shoot).andThen(colorCommand(Color.kRed))));
+        NamedCommands.registerCommand("Pivot to Shoot", (pivot.pivotTo(Pivots.ShootL4).andThen(colorCommand(Color.kRed))));
         NamedCommands.registerCommand("Elevator L4",
             Commands.sequence( 
                 elevators.setNextStopCommand(ElevatorStop.L4),
@@ -106,6 +109,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Pivot to Out", intake.setIntakeSpeed(-0.3).andThen(new WaitCommand(.3)).andThen(pivot.pivotTo(Pivots.ShootL1)));
         NamedCommands.registerCommand("Shoot", autoShootCoral().andThen(colorCommand(Color.kGreen)));
         NamedCommands.registerCommand("Feed", feed());//.until(intake::hasCoral).andThen(pivot.pivotTo(Pivots.Shoot)).andThen(colorCommand(Color.kOrange)));
+        NamedCommands.registerCommand("Wait for Coral", autoFeed());
         NamedCommands.registerCommand("FindCoral",
             (new InstantCommand(() -> LimelightHelpers.setLEDMode_ForceOn("limelight")))
             .andThen (new RunCommand(
@@ -153,7 +157,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         /* Driver Buttons */
-
+        
         driver.povUp().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));        
         driver.povDown().onTrue(s_Swerve.resetModulesToAbsolute());
         driver.povLeft().onTrue(pivot.pivotTo(Pivots.Down));
@@ -199,19 +203,17 @@ public class RobotContainer {
         driver.back().onTrue(pivot.pivotToOnElevator(elevators.getNextStop()));
 
         driver.start().onTrue(feed());
-
         // Current sense the intake but make sure it is high for > 0.75s to reduce false triggers
         Trigger coralSensed = new Trigger(() -> intake.hasCoral()).debounce(0.75, DebounceType.kBoth);
-  
 
         //Wait command to stop coral from hitting cross-bar
         coralSensed.onTrue(
-            new WaitCommand(.25)
+            new WaitCommand(.1)
             .andThen(pivot.pivotTo(Pivots.Shoot).andThen(ledCommand(LedMode.FLASH, Color.kCoral, Color.kBlack)))
             .andThen(new WaitCommand(1)).andThen(colorCommand(Color.kBlue)));
         
         //colorCommand(Color.kCoral).andThen(pivot.pivotTo(Pivots.Shoot))
-
+        
     }
 
     /*  
@@ -247,16 +249,20 @@ public class RobotContainer {
             .andThen(colorCommand(original_color));
     }
 
-    public Command autoShootCoral(){
+    public Command autoShootCoral() {
         return Commands.sequence(    
                 intake.ejectCoralCmd(elevators),
                 Commands.sequence(
                     new WaitCommand(.3),
                     pivot.pivotTo(Pivots.Flip)
                 ).unless( () -> elevators.getNextStop() != ElevatorStop.L4 ),
-                new WaitCommand(.5),
+                new WaitCommand(.2),
                 (pivot.pivotTo(Pivots.Up)));
-     }
+    }
+
+    public Command autoFeed() {
+            return Commands.waitUntil(() -> intake.hasCoral()).withTimeout(2.5);
+    }
 
     private Command colorCommand(Color acolor) {
         return new InstantCommand(() -> m_led.setColor(acolor));

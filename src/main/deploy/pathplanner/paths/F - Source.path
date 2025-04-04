@@ -48,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "Feed",
-      "waypointRelativePos": 0.21498371335504884,
+      "waypointRelativePos": 0.10423452768729638,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -59,8 +59,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 1.25,
+    "maxVelocity": 2.1,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
