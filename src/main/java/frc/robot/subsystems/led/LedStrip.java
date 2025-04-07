@@ -49,7 +49,7 @@ public class LedStrip {
             if (pixel >= getBufferLength()) {
                 break;
             }
-            setPixel(i, color);
+            setPixel(pixel, color);
         }
     }
     // set a pixel based on a blend of colors c1 & c2 with a ratio (0..1)

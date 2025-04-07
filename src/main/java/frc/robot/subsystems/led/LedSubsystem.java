@@ -53,14 +53,19 @@ public class LedSubsystem extends SubsystemBase {
     
     @Override
     public void periodic() {
-        dispatchLedEffect(mode, primaryColor);
+        if(edu.wpi.first.wpilibj.RobotState.isDisabled()) {
+            // game over, switch to pacman effect
+            dispatchLedEffect(LedMode.PACMAN);
+        } else {
+            dispatchLedEffect(mode);
+        }
         ledStrip.repaint();
         SmartDashboard.putString("led/mode", this.mode.toString());
         SmartDashboard.putString("led/primary_color", this.primaryColor.toString());
         SmartDashboard.putString("led/secondary_color", this.secondaryColor.toString());
     }
 
-    public void dispatchLedEffect(LedMode mode, Color primaryColor) {
+    public void dispatchLedEffect(LedMode mode) {
         if (mode == LedMode.SOLID) {
             solid(primaryColor);
         } else if (mode == LedMode.STROBE) {
@@ -70,7 +75,19 @@ public class LedSubsystem extends SubsystemBase {
         } else if (mode == LedMode.WAVE) {
             wave(primaryColor, secondaryColor, 25.0, 1.0);  
         } else if (mode == LedMode.WAVE2) {
-            wave(primaryColor, secondaryColor, 10.0, 0.5);  
+            wave(primaryColor, secondaryColor, 10.0, 0.5);
+        } else if (mode == LedMode.REDSTART) {
+            // modified fire for red-alliance start// 
+            solid(Color.kRed, midlow, midhigh);
+            Color redoff = new Color(1,0,0);
+            fireLeftEffect.update(ledStrip, Color.kWhite, Color.kYellow, Color.kRed, redoff,false);
+            fireRightEffect.update(ledStrip, Color.kOrange, Color.kYellow, Color.kRed, redoff, true);
+        } else if (mode == LedMode.BLUESTART) {
+            // modified fire for red-alliance start// 
+            solid(Color.kBlue, midlow, midhigh);
+            Color blueoff = new Color(0,0,1);
+            fireLeftEffect.update(ledStrip, Color.kPurple, Color.kGreen, Color.kBlue, blueoff, false);
+            fireRightEffect.update(ledStrip, Color.kGreen, Color.kPurple, Color.kBlue, blueoff, true);              
         } else if (mode == LedMode.FIRE) {
             // one-sided fire // 
             //fireEffect.update(ledStrip, Color.WHITE, Color.YELLOW, Color.RED, Color.BLACK);
@@ -133,6 +150,8 @@ public class LedSubsystem extends SubsystemBase {
     }
 
     public static enum LedMode {
+        REDSTART,
+        BLUESTART,
         SOLID,
         STROBE,
         WAVE,

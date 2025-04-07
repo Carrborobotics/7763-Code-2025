@@ -126,8 +126,10 @@ public class RobotContainer {
 
         // set color at startup
         original_color = Robot.isRed() ? redBumper : blueBumper;
+        LedMode original_mode = Robot.isRed() ? LedMode.REDSTART : LedMode.BLUESTART;
+        //LedMode original_mode = LedMode.PACMAN;
         m_led.setColor(original_color);
-
+        m_led.setMode(original_mode); // original_color, original_color);
         targetField = new Field2d();
         SmartDashboard.putData("Target Field", targetField);
 
@@ -262,7 +264,7 @@ public class RobotContainer {
 
     public Command autoFeed() {
             return Commands.waitUntil(() -> intake.hasCoral()).withTimeout(2.5);
-    }
+    }   
 
     private Command colorCommand(Color acolor) {
         return new InstantCommand(() -> m_led.setColor(acolor));
@@ -310,7 +312,7 @@ public class RobotContainer {
             intake.ejectCoralCmd(elevators),
             Commands.runOnce(() -> {
                 ReefFace currentFace = s_Swerve.goalFace; // Capture the current value
-                new LocalSwerve(s_Swerve, currentFace.alignMiddle, true, m_led).withTimeout(3.5).schedule();
+                new LocalSwerve(s_Swerve, currentFace.alignMiddle, true, m_led).withTimeout(2.0).schedule();
             })
         );
 
@@ -333,11 +335,11 @@ public class RobotContainer {
     // pullAlgae - aligns, elevates, turns on intake for time period since algae wont hit sensor, reverses bot some
     private ElevatorStop getAlgaeStop(ReefFace face){
         // Check the map to see if the algae is L2 or L3
-        ElevatorStop algaeHeight = face.algaeHigh ? ElevatorStop.L3_ALGAE : ElevatorStop.L2_ALGAE;
+        ElevatorStop algaeHeight = face.algaeHigh ? ElevatorStop.L3_ALGAE : ElevatorStop.L3_ALGAE;
         return algaeHeight;
     }
     private ElevatorStop getAlgaeBelowStop(ReefFace face) {
-        return face.algaeHigh ? ElevatorStop.L3 : ElevatorStop.L2;
+        return face.algaeHigh ? ElevatorStop.L3 : ElevatorStop.L2;                  
     }
 
     // scoreBarge - elevates to max, move forward?, reverse intake, back up?, lower elevator, pivot to feed
