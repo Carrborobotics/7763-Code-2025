@@ -222,7 +222,7 @@ public final class Constants {
         public static final double angleKD = chosenModule.angleKD;
 
         /* Drive Motor PID Values */
-        public static final double driveKP = 0.12; // TODO: This must be tuned to specific robot
+        public static final double driveKP = 0.12; // 0.12 FOR COMP
         public static final double driveKI = 0.0;
         public static final double driveKD = 0.0;
         public static final double driveKF = 0.0;
@@ -234,7 +234,7 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 4.5; // TODO: This must be tuned to specific robot
+        public static final double maxSpeed = 0.5; // 4.5 FOR COMP
         /*
          * These are theorectial values to start with, tune after
          * Kraken FOC-DIS (L1.0): ft/s = 12.9 | m/s = 3.93192
@@ -254,7 +254,7 @@ public final class Constants {
          */
 
         /** Radians per Second */
-        public static final double maxAngularVelocity = 10.0; 
+        public static final double maxAngularVelocity = 2.0; //10 FOR COMP
 
         /* Neutral Modes */
         public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;

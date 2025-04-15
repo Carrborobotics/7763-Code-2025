@@ -162,7 +162,7 @@ public class RobotContainer {
         
         driver.povUp().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));        
         driver.povDown().onTrue(s_Swerve.resetModulesToAbsolute());
-        driver.povLeft().onTrue(pivot.pivotTo(Pivots.Down));
+        driver.povLeft().onTrue(pivot.pivotTo(Pivots.Down).andThen(intake.setIntakeSpeed(0)));
 
         driver.a().onTrue(elevators.setNextStopCommand(ElevatorStop.L1)
             .andThen(pivot.pivotToOnElevator(ElevatorStop.L1))
