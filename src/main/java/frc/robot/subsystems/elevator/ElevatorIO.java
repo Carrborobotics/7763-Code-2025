@@ -46,9 +46,13 @@ public interface ElevatorIO {
 
     default void setBrakeMode(boolean enabled) {}
 
+    default Distance getPosition() {return Inches.of(0);}
+
     default void setPID(double p, double i, double d) {}
 
     default void setFF(double kS, double kG, double kV, double kA) {}
 
     default void stop() {}
+
+    default void periodic() {}
 }

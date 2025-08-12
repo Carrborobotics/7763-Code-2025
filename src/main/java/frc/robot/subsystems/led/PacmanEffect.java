@@ -1,4 +1,5 @@
 package frc.robot.subsystems.led;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
 public class PacmanEffect {
@@ -10,7 +11,7 @@ public class PacmanEffect {
     private boolean pelletEaten = false;
     private boolean pacmanEating = false;
     private double pacmanNormalSpeed = 0.5; // Pixels per second
-    private double pacmanEatingSpeed = 1.0;
+    private double pacmanEatingSpeed = 0.7;
     private double ghostSpeed = 0.4;
     private int pacmanDirection = -1; // 1 = right, -1 = left
 
@@ -99,6 +100,7 @@ public class PacmanEffect {
         if (pacmanPosition >= 0 && pacmanPosition < numLeds) {
             int mouthinset = (flashtime % 2)*2;
             int pacpos = (int) pacmanPosition;
+            //debug// SmartDashboard.putNumber("LED/pacpos", pacmanPosition);
             if (pacmanDirection > 0) { // right
                 ledStrip.setPixelWidth(pacpos, pacmanColor, pacWidth-mouthinset);
             } else {

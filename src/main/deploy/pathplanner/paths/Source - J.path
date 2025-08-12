@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 3.68,
-        "y": 2.96
+        "x": 3.97,
+        "y": 2.79
       },
       "prevControl": {
-        "x": 3.1863894652206652,
-        "y": 2.1050414746109474
+        "x": 3.3581377551020406,
+        "y": 2.2229081632653074
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "Pivot to Shoot",
-      "waypointRelativePos": 0.04560260586319215,
+      "waypointRelativePos": 0.04071661237785014,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -45,7 +45,7 @@
     },
     {
       "name": "Elevator L4",
-      "waypointRelativePos": 0.21172638436482077,
+      "waypointRelativePos": 0.1970684039087947,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -56,7 +56,7 @@
     },
     {
       "name": "Check",
-      "waypointRelativePos": 0.9462540716612378,
+      "waypointRelativePos": 0.9,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

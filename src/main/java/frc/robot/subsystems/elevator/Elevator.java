@@ -37,12 +37,14 @@ public class Elevator extends SubsystemBase {
     private final ElevatorVisualizer goalVisualizer;
 
     private Distance setpoint = Inches.of(0.0);
+    private Distance position = Inches.of(0.0);
 
     private final RobotState actual;
     private final RobotState target;
     private final RobotState goal;
 
     public ElevatorStop nextStop;
+    public ElevatorStop nextStopVal;
 
     public Elevator(ElevatorIO io) {
         this.io = io;
@@ -71,12 +73,12 @@ public class Elevator extends SubsystemBase {
 
     private final EnumMap<ElevatorStop, Distance> elevatorHeights = new EnumMap<>(Map.ofEntries(
             Map.entry(ElevatorStop.INTAKE, Inches.of(0)),
-            Map.entry(ElevatorStop.L1, Inches.of(3.5)),
-            Map.entry(ElevatorStop.L2, Inches.of(6.5)), // was 8
-            Map.entry(ElevatorStop.L2_ALGAE, Inches.of(9.5)),
-            Map.entry(ElevatorStop.L3, Inches.of(12.0)), // was 13.5
-            Map.entry(ElevatorStop.L3_ALGAE, Inches.of(13.2)),
-            Map.entry(ElevatorStop.L4, Inches.of(21.2))  //21.2
+            Map.entry(ElevatorStop.L1, Inches.of(0)),
+            Map.entry(ElevatorStop.L2, Inches.of(5.5)), // was 8
+            Map.entry(ElevatorStop.L2_ALGAE, Inches.of(8)), // DO NOT USE
+            Map.entry(ElevatorStop.L3, Inches.of(11.5)), // was 13.5
+            Map.entry(ElevatorStop.L3_ALGAE, Inches.of(7.5)),
+            Map.entry(ElevatorStop.L4, Inches.of(21.5))  //21.2
         ));
 
     public Command moveTo(ElevatorStop stop) {
@@ -120,13 +122,15 @@ public class Elevator extends SubsystemBase {
     }
 
     public Command waitForLessThanPosition(Distance position) {
-        return Commands.waitUntil(() -> this.inputs.position.lt(position));
+        return Commands.waitUntil(() -> this.io.getPosition().lt(position));
     }
 
     @Override
     public void periodic() {
-         super.periodic();
-
+        super.periodic();
+        io.periodic();
+        nextStopVal = this.nextStop;
+        position = this.actual.getElevatorPosition();
         this.io.updateInputs(inputs);
         Logger.processInputs("Elevator", inputs);
 
@@ -142,8 +146,10 @@ public class Elevator extends SubsystemBase {
         actual.updateElevatorPosition(this.inputs.position);
         target.updateElevatorPosition(this.inputs.setpointPosition);
         goal.updateElevatorPosition(this.setpoint);
-        
+        SmartDashboard.putString("elevator/REAL Position", this.io.getPosition().toString());
         SmartDashboard.putString("elevator/next_stop", this.nextStop.toString());
+        SmartDashboard.putString("elevator/next_stop val", nextStopVal.toString());
+
         SmartDashboard.putString("elevator/motor voltage", this.inputs.appliedVoltsLeader.toString());
         SmartDashboard.putString("elevator/motor supply current", this.inputs.supplyCurrentLeader.toString());
         SmartDashboard.putString("elevator/motor torque current", this.inputs.torqueCurrentLeader.toString());
