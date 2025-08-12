@@ -16,13 +16,13 @@ import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+//import edu.wpi.first.wpilibj2.command.InstantCommand;
+//import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+//import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 
-public class Elevator extends SubsystemBase {
+public class dontuse_Elevator extends SubsystemBase {
     private SparkFlex elevatorLeft;
     private SparkFlex elevatorRight;
     private SparkClosedLoopController closedLoopControllerLeft;
@@ -32,7 +32,7 @@ public class Elevator extends SubsystemBase {
     private double currentLevel = 0.0;
     private final ElevatorFeedforward el_Feedforward = new ElevatorFeedforward(1.0, 0.0, 0.0);
 
-    public Elevator() {
+    public dontuse_Elevator() {
         elevatorLeft = setupElevatorSparkFlex(true, Constants.CANConstants.elevatorLeftId);
         closedLoopControllerLeft = elevatorLeft.getClosedLoopController();
         

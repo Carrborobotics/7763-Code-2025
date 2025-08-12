@@ -4,8 +4,14 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+
+import edu.wpi.first.math.geometry.Pose2d;
+//import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.TimedRobot;
+//import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -19,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
 
   private Command m_autonomousCommand;
@@ -37,6 +43,9 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    Logger.addDataReceiver(new NT4Publisher());
+    Logger.start();
   }
 
   /**
@@ -61,7 +70,17 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
+    Logger.recordOutput("RobotPose", new Pose2d());
 
+    // Below are errors for the "Pose3d", used in 6328 code
+    
+    //Logger.recordOutput("ZeroedComponentPoses", new Pose3d[] {new Pose3d()});
+    //Logger.recordOutput(
+    //  "FinalComponentPoses", new Pose3d[] {
+    //    new Pose3d(
+    //      -.238, 0.0, 0.298, new Rotation3d(0.0, Math.sin(Timer.getTimestamp()) - 1.0), 0.0))
+    //  }
+    //);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -117,5 +136,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
+  }
+
+  public static boolean isRed() {
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+        return alliance.get() == DriverStation.Alliance.Red;
+    }
+    return false;
   }
 }
